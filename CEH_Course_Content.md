@@ -11,7 +11,8 @@
 
 ### Welcome Message
 
-Welcome to the Certified Ethical Hacker (CEH) course! I'm your instructor, and I'm thrilled to guide you on this exciting journey into the world of ethical hacking and cybersecurity.
+Welcome to the Certified Ethical Hacker (CEH) course! 
+My Name is Engr. Sulaiman Musa Abdullahi I'm your instructor, and I'm thrilled to guide you on this exciting journey into the world of ethical hacking and cybersecurity.
 
 ### Instructor Background
 
