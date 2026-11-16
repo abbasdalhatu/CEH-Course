@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A structured 16-week Certified Ethical Hacker learning programme covering ethical hacking methodology, reconnaissance, scanning, enumeration, vulnerability analysis, web security, wireless security, cryptography and cloud security.">
+  <meta name="theme-color" content="#080d18">
+  <link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/">
+  <title>CEH Academy | Certified Ethical Hacker Course</title>
+  <style>
+    :root {
+      --bg: #080d18;
+      --surface: #101a2b;
+      --surface-2: #142238;
+      --border: #263750;
+      --text: #edf5ff;
+      --muted: #9aabc2;
+      --green: #00e5a0;
+      --blue: #00b8ff;
+      --danger: #ff647c;
+      --radius: 18px;
+      --shadow: 0 18px 50px rgba(0,0,0,.24);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 12% 0%, rgba(0,229,160,.10), transparent 34%),
+        radial-gradient(ellipse at 92% 8%, rgba(0,184,255,.10), transparent 30%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(8,13,24,.88); backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(38,55,80,.8);
+    }
+    .nav { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 850; letter-spacing: .04em; }
+    .brand-mark {
+      width: 38px; height: 38px; display: grid; place-items: center;
+      border: 1px solid rgba(0,229,160,.55); border-radius: 11px;
+      color: var(--green); background: rgba(0,229,160,.08); font-size: 18px;
+    }
+    .brand small { display: block; color: var(--muted); font-size: 9px; letter-spacing: .2em; font-weight: 700; }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 13px; font-weight: 650; }
+    .nav-links a:hover { color: var(--green); }
+    .nav-cta { color: var(--bg) !important; background: var(--green); padding: 10px 15px; border-radius: 9px; }
+    .hero { padding: 88px 0 76px; }
+    .hero-grid { display: grid; grid-template-columns: 1.35fr .65fr; gap: 46px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px; padding: 7px 12px;
+      color: var(--green); border: 1px solid rgba(0,229,160,.28);
+      background: rgba(0,229,160,.07); border-radius: 999px;
+      font-size: 11px; letter-spacing: .12em; font-weight: 800;
+    }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 12px var(--green); }
+    h1 { margin: 22px 0 18px; max-width: 760px; font-size: clamp(42px, 6vw, 70px); line-height: 1.04; letter-spacing: -.055em; }
+    h1 span { color: var(--green); }
+    .hero-copy { max-width: 650px; color: var(--muted); font-size: 17px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 13px 19px; border-radius: 10px; font-weight: 800; font-size: 13px; transition: .2s ease; }
+    .btn-primary { background: var(--green); color: #04130f; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,229,160,.2); }
+    .btn-secondary { border: 1px solid var(--border); color: var(--text); background: rgba(255,255,255,.025); }
+    .hero-panel {
+      padding: 25px; border: 1px solid var(--border); border-radius: 22px;
+      background: linear-gradient(150deg, rgba(20,34,56,.94), rgba(12,20,34,.92)); box-shadow: var(--shadow);
+    }
+    .panel-top { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; letter-spacing: .13em; font-weight: 800; }
+    .terminal { margin: 24px 0; padding: 18px; border-radius: 13px; background: #070c14; border: 1px solid #1b2b40; font: 12px/2 "SFMono-Regular", Consolas, monospace; color: #a8bbd1; }
+    .terminal .green { color: var(--green); } .terminal .blue { color: var(--blue); }
+    .panel-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat { padding: 13px; border: 1px solid var(--border); border-radius: 12px; }
+    .stat strong { display: block; font-size: 23px; color: var(--green); line-height: 1.2; }
+    .stat span { color: var(--muted); font-size: 11px; }
+    .section { padding: 54px 0; }
+    .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 25px; }
+    .section-kicker { color: var(--green); text-transform: uppercase; letter-spacing: .16em; font-size: 10px; font-weight: 850; }
+    h2 { margin: 7px 0 0; font-size: clamp(27px, 4vw, 38px); letter-spacing: -.035em; line-height: 1.2; }
+    .section-heading p { max-width: 470px; margin: 0; color: var(--muted); font-size: 13px; }
+    .notice {
+      display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start;
+      padding: 22px; border: 1px solid rgba(255,100,124,.38); border-radius: var(--radius);
+      background: linear-gradient(120deg, rgba(255,100,124,.09), rgba(16,26,43,.9));
+    }
+    .notice-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: rgba(255,100,124,.12); color: var(--danger); font-size: 20px; }
+    .notice h3 { margin: 0 0 5px; font-size: 16px; color: #ff8798; }
+    .notice p { margin: 0; color: #c2ccda; font-size: 13px; }
+    .notice a { display: inline-block; margin-top: 10px; color: var(--green); font-weight: 800; font-size: 12px; }
+    .week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .week-card {
+      position: relative; min-height: 160px; padding: 19px;
+      border: 1px solid var(--border); border-radius: 15px;
+      background: linear-gradient(145deg, rgba(20,34,56,.88), rgba(13,22,37,.94));
+      transition: .2s ease; overflow: hidden;
+    }
+    .week-card::after { content: ""; position: absolute; width: 90px; height: 90px; right: -45px; bottom: -48px; border-radius: 50%; background: rgba(0,184,255,.08); }
+    .week-card:hover { transform: translateY(-4px); border-color: rgba(0,229,160,.65); box-shadow: 0 14px 32px rgba(0,0,0,.2); }
+    .week-number { color: var(--green); font: 800 10px/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .12em; }
+    .week-card h3 { margin: 14px 0 10px; font-size: 15px; line-height: 1.35; }
+    .week-card span:last-child { color: var(--muted); font-size: 11px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .feature { padding: 22px; border: 1px solid var(--border); border-radius: 15px; background: rgba(16,26,43,.72); }
+    .feature-icon { color: var(--blue); font-size: 22px; }
+    .feature h3 { margin: 12px 0 6px; font-size: 15px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 12px; }
+    .bottom-cta { padding: 34px; border: 1px solid rgba(0,184,255,.3); border-radius: 20px; background: linear-gradient(115deg, rgba(0,184,255,.09), rgba(0,229,160,.07)); display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .bottom-cta h2 { font-size: 25px; }
+    .bottom-cta p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    footer { margin-top: 55px; border-top: 1px solid var(--border); padding: 28px 0; color: var(--muted); font-size: 11px; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .footer-links { display: flex; gap: 18px; flex-wrap: wrap; }
+    .footer-links a:hover { color: var(--green); }
+    @media (max-width: 900px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-panel { max-width: 540px; }
+      .week-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      .container { width: min(100% - 28px, 1120px); }
+      .nav { min-height: 64px; }
+      .nav-links { gap: 12px; font-size: 11px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .hero { padding: 62px 0 48px; }
+      .hero-copy { font-size: 15px; }
+      .section { padding: 38px 0; }
+      .section-heading { display: block; }
+      .section-heading p { margin-top: 10px; }
+      .week-grid { gap: 10px; }
+      .week-card { min-height: 150px; padding: 14px; }
+      .week-card h3 { font-size: 13px; }
+      .feature-grid { grid-template-columns: 1fr; }
+      .notice { padding: 16px; }
+      .bottom-cta { display: block; padding: 23px; }
+      .bottom-cta .btn { margin-top: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container nav">
+      <a class="brand" href="./" aria-label="CEH Academy home">
+        <span class="brand-mark">⌘</span>
+        <span>CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#curriculum">Curriculum</a>
+        <a href="#learning">Learning path</a>
+        <a href="LEGAL-DISCLAIMER.md">Legal policy</a>
+        <a class="nav-cta" href="#curriculum">Explore course ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="status-dot"></span> AUTHORIZED LEARNING ENVIRONMENT</div>
+          <h1>MASTER THE ART OF <span>ETHICAL HACKING.</span></h1>
+          <p class="hero-copy">Build practical cybersecurity knowledge through a structured 16-week learning journey. Understand how systems are assessed, how vulnerabilities are discovered, and how security can be improved — responsibly and lawfully.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#curriculum">Explore the 16-week course ↗</a>
+            <a class="btn btn-secondary" href="LEGAL-DISCLAIMER.md">Read legal disclaimer</a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Course overview">
+          <div class="panel-top"><span>CEH / TRAINING CONSOLE</span><span class="status-dot"></span></div>
+          <div class="terminal">
+            <div><span class="green">learner@ceh-academy</span>:~$ start-learning</div>
+            <div><span class="blue">[01]</span> Ethical hacking foundations</div>
+            <div><span class="blue">[02]</span> Security assessment skills</div>
+            <div><span class="blue">[03]</span> Practical lab exercises</div>
+            <div><span class="blue">[04]</span> Responsible reporting</div>
+            <div class="green">Status: READY FOR LEARNING_</div>
+          </div>
+          <div class="panel-stats">
+            <div class="stat"><strong>16</strong><span>Weeks of learning</span></div>
+            <div class="stat"><strong>01</strong><span>Responsible approach</span></div>
+            <div class="stat"><strong>Labs</strong><span>Practical exercises</span></div>
+            <div class="stat"><strong>CEH</strong><span>Course focus</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="container section" aria-labelledby="legal-title">
+      <div class="notice">
+        <div class="notice-icon">⚠</div>
+        <div>
+          <h3 id="legal-title">LEGAL WARNING — AUTHORIZATION IS MANDATORY</h3>
+          <p>Only test systems you own or systems for which you have obtained explicit, prior, written permission from the owner or an authorized representative. Unauthorized access, scanning, exploitation, disruption, or data access can lead to criminal prosecution, imprisonment, fines, civil claims, academic or professional discipline, and reputational damage. Course participation does not grant permission to test third-party systems.</p>
+          <a href="LEGAL-DISCLAIMER.md">Read the complete Legal Disclaimer & Authorized Use Policy →</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="container section" id="curriculum">
+      <div class="section-heading">
+        <div><div class="section-kicker">The curriculum</div><h2>Your 16-week learning journey</h2></div>
+        <p>Follow the course in sequence. Each week will lead to its lecture content, practical exercises, and assignment materials.</p>
+      </div>
+      <div class="week-grid">
+        <a class="week-card" href="weeks/week-01.html"><div class="week-number">WEEK 01</div><h3>Introduction to Ethical Hacking & Lab Setup</h3><span>Foundations and environment</span></a>
+        <a class="week-card" href="weeks/week-02.html"><div class="week-number">WEEK 02</div><h3>Footprinting and Reconnaissance</h3><span>Information gathering</span></a>
+        <a class="week-card" href="weeks/week-03.html"><div class="week-number">WEEK 03</div><h3>Scanning Networks</h3><span>Network discovery and scanning</span></a>
+        <a class="week-card" href="weeks/week-04.html"><div class="week-number">WEEK 04</div><h3>Enumeration</h3><span>Identifying exposed information</span></a>
+        <a class="week-card" href="weeks/week-05.html"><div class="week-number">WEEK 05</div><h3>Vulnerability Analysis</h3><span>Finding and assessing weaknesses</span></a>
+        <a class="week-card" href="weeks/week-06.html"><div class="week-number">WEEK 06</div><h3>System Hacking</h3><span>Access and system security</span></a>
+        <a class="week-card" href="weeks/week-07.html"><div class="week-number">WEEK 07</div><h3>Malware Threats</h3><span>Threat concepts and safe analysis</span></a>
+        <a class="week-card" href="weeks/week-08.html"><div class="week-number">WEEK 08</div><h3>Sniffing</h3><span>Network traffic analysis</span></a>
+        <a class="week-card" href="weeks/week-09.html"><div class="week-number">WEEK 09</div><h3>Social Engineering</h3><span>Human-focused security risks</span></a>
+        <a class="week-card" href="weeks/week-10.html"><div class="week-number">WEEK 10</div><h3>Denial-of-Service (DoS) Attacks</h3><span>Availability and resilience</span></a>
+        <a class="week-card" href="weeks/week-11.html"><div class="week-number">WEEK 11</div><h3>Session Hijacking</h3><span>Session security concepts</span></a>
+        <a class="week-card" href="weeks/week-12.html"><div class="week-number">WEEK 12</div><h3>Evading IDS, Firewalls, and Honeypots</h3><span>Defensive detection and controls</span></a>
+        <a class="week-card" href="weeks/week-13.html"><div class="week-number">WEEK 13</div><h3>Hacking Web Servers & Web Applications</h3><span>Web security assessment</span></a>
+        <a class="week-card" href="weeks/week-14.html"><div class="week-number">WEEK 14</div><h3>SQL Injection & XSS Attacks</h3><span>Common web vulnerabilities</span></a>
+        <a class="week-card" href="weeks/week-15.html"><div class="week-number">WEEK 15</div><h3>Hacking Wireless Networks & Mobile Platforms</h3><span>Wireless and mobile security</span></a>
+        <a class="week-card" href="weeks/week-16.html"><div class="week-number">WEEK 16</div><h3>Cloud Computing, Cryptography & Final Project</h3><span>Capstone and course completion</span></a>
+      </div>
+    </section>
+
+    <section class="container section" id="learning">
+      <div class="section-heading">
+        <div><div class="section-kicker">How you'll learn</div><h2>Knowledge backed by practice</h2></div>
+        <p>Develop a responsible security mindset while building technical skills through guided study and controlled exercises.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon">▤</div><h3>Structured lecture content</h3><p>Study core concepts, terminology, methodologies, and security principles week by week.</p></article>
+        <article class="feature"><div class="feature-icon">⌘</div><h3>Practical lab exercises</h3><p>Apply concepts in isolated, intentionally vulnerable, or otherwise explicitly authorized environments.</p></article>
+        <article class="feature"><div class="feature-icon">◎</div><h3>Assignments and projects</h3><p>Strengthen your understanding through weekly tasks, documentation, and a final security assessment project.</p></article>
+      </div>
+    </section>
+
+    <section class="container section">
+      <div class="bottom-cta">
+        <div><div class="section-kicker">Start learning responsibly</div><h2>Build skills. Respect boundaries. Improve security.</h2><p>Begin with Week 1 and work through the programme one step at a time.</p></div>
+        <a class="btn btn-primary" href="weeks/week-01.html">Start Week 1 ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <div>© 2026 CEH Academy · Educational use and authorized security testing only.</div>
+      <div class="footer-links"><a href="#curriculum">Curriculum</a><a href="#learning">Learning path</a><a href="LEGAL-DISCLAIMER.md">Legal disclaimer</a></div>
+    </div>
+  </footer>
+</body>
+</html>
