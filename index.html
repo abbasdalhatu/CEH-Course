@@ -91,8 +91,16 @@
     }
     .notice-icon { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: rgba(255,100,124,.12); color: var(--danger); font-size: 20px; }
     .notice h3 { margin: 0 0 5px; font-size: 16px; color: #ff8798; }
-    .notice p { margin: 0; color: #c2ccda; font-size: 13px; }
-    .notice a { display: inline-block; margin-top: 10px; color: var(--green); font-weight: 800; font-size: 12px; }
+    .notice p { margin: 0 0 12px; color: #c2ccda; font-size: 13px; }
+    .notice-content { min-width: 0; }
+    .notice-content h3 { margin: 0 0 10px; }
+    .legal-policy { margin-top: 22px; padding-top: 20px; border-top: 1px solid rgba(255,100,124,.25); }
+    .legal-policy h4 { margin: 18px 0 8px; color: #ffb1bd; font-size: 14px; }
+    .legal-policy p, .legal-policy li { color: #c2ccda; font-size: 13px; }
+    .legal-policy ul, .legal-policy ol { margin: 8px 0 14px; padding-left: 21px; }
+    .legal-policy li { margin: 6px 0; }
+    .legal-emphasis { color: #ff8798 !important; font-weight: 850; }
+    .legal-policy strong { color: var(--text); }
     .week-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     .week-card {
       position: relative; min-height: 160px; padding: 19px;
@@ -175,7 +183,7 @@
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#curriculum">Curriculum</a>
         <a href="#learning">Learning path</a>
-        <a href="LEGAL-DISCLAIMER.md">Legal policy</a>
+        <a href="#legal-policy">Legal policy</a>
         <a class="nav-cta" href="#curriculum">Explore course ↗</a>
       </nav>
     </div>
@@ -190,7 +198,7 @@
           <p class="hero-copy">Build practical cybersecurity knowledge through a structured 16-week learning journey. Understand how systems are assessed, how vulnerabilities are discovered, and how security can be improved — responsibly and lawfully.</p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#curriculum">Explore the 16-week course ↗</a>
-            <a class="btn btn-secondary" href="LEGAL-DISCLAIMER.md">Read legal disclaimer</a>
+            <a class="btn btn-secondary" href="#legal-policy">Read legal disclaimer</a>
           </div>
         </div>
         <aside class="hero-panel" aria-label="Course overview">
@@ -213,13 +221,56 @@
       </div>
     </section>
 
-    <section class="container section" aria-labelledby="legal-title">
+    <section class="container section" id="legal-policy" aria-labelledby="legal-title">
       <div class="notice">
         <div class="notice-icon">⚠</div>
-        <div>
+        <div class="notice-content">
           <h3 id="legal-title">LEGAL WARNING — AUTHORIZATION IS MANDATORY</h3>
-          <p>Only test systems you own or systems for which you have obtained explicit, prior, written permission from the owner or an authorized representative. Unauthorized access, scanning, exploitation, disruption, or data access can lead to criminal prosecution, imprisonment, fines, civil claims, academic or professional discipline, and reputational damage. Course participation does not grant permission to test third-party systems.</p>
-          <a href="LEGAL-DISCLAIMER.md">Read the complete Legal Disclaimer & Authorized Use Policy →</a>
+          <p><strong>UNAUTHORIZED USE OF THIS COURSE CONTENT IS STRICTLY PROHIBITED.</strong></p>
+          <p>This course is provided exclusively for educational purposes, ethical hacking training, cybersecurity awareness, and authorized security testing.</p>
+          <p>Only test systems you own or systems for which you have obtained <strong>explicit, prior, written permission</strong> from the owner or an authorized representative. Verbal approval, assumed permission, public accessibility, or possession of someone's IP address does not constitute sufficient authorization.</p>
+          <p class="legal-emphasis">IF YOU DO NOT HAVE EXPLICIT WRITTEN AUTHORIZATION, DO NOT TEST THE SYSTEM.</p>
+
+          <div class="legal-policy">
+            <h4>1. Potential consequences of unauthorized activities</h4>
+            <p>Anyone who misuses these materials to access, interfere with, damage, compromise, or obtain data from systems without lawful authorization may face serious consequences, depending on the conduct and applicable law, including:</p>
+            <ol>
+              <li><strong>Criminal investigation and prosecution</strong> by relevant law-enforcement authorities.</li>
+              <li><strong>Imprisonment</strong>, where a court establishes an offence for which imprisonment is prescribed.</li>
+              <li><strong>Fines and financial sanctions</strong> under applicable cybercrime laws.</li>
+              <li><strong>Civil lawsuits</strong> and claims for compensation arising from financial loss, data exposure, disruption, or damage.</li>
+              <li><strong>Financial liability</strong> for proven investigation, recovery, restoration, and other losses.</li>
+              <li><strong>Academic or professional disciplinary action</strong>, including suspension, expulsion, dismissal, or loss of professional opportunities where applicable.</li>
+              <li><strong>Reputational damage</strong>, including loss of trust, employment opportunities, and professional credibility.</li>
+            </ol>
+
+            <h4>2. Legal position in Nigeria</h4>
+            <p>The Nigerian Cybercrimes (Prohibition, Prevention, etc.) Act 2015, as amended in 2024, criminalizes specified unauthorized computer-related activities. Depending on the offence and circumstances, penalties can include imprisonment and substantial fines. Relevant provisions may include Sections 5, 6, and 14. Learners should consult the current law and obtain qualified legal advice where necessary.</p>
+            <p>The legal consequences of any activity depend on the specific facts, the applicable law, and the decision of the relevant authorities and courts. This notice is educational information and is not legal advice.</p>
+
+            <h4>3. Zero-tolerance principle</h4>
+            <p>The fact that a technique is taught in this course does not give you permission to use it against another person's system. Describing an activity as educational does not automatically make unauthorized access or interference lawful.</p>
+            <p><strong>If authorization is withdrawn, expires, or the activity moves outside the approved scope, stop testing immediately.</strong></p>
+
+            <h4>4. Written authorization checklist</h4>
+            <p>Before any practical test on a system you do not personally own, obtain written authorization that clearly identifies:</p>
+            <ul>
+              <li>The person or organization granting permission and their authority to do so.</li>
+              <li>The exact systems, domains, IP addresses, applications, or networks in scope.</li>
+              <li>The permitted testing methods and activities.</li>
+              <li>The testing dates, times, and any operational restrictions.</li>
+              <li>Prohibited actions, data-handling requirements, and emergency contacts.</li>
+              <li>The process for reporting findings and stopping the test.</li>
+            </ul>
+            <p>Keep a copy of the authorization and remain within its exact scope. Permission to test one system does not authorize testing connected systems or third-party services.</p>
+
+            <h4>5. Safe learning environments</h4>
+            <p>Where possible, complete practical exercises in intentionally vulnerable virtual machines, isolated labs, capture-the-flag environments, or systems specifically provided for training. Do not use real organizations, public infrastructure, or third-party systems as targets unless you have explicit written authorization covering the exact activity.</p>
+
+            <h4>6. Acknowledgement</h4>
+            <p>By continuing to use this course, you acknowledge that you are responsible for ensuring your activities comply with applicable laws, regulations, and authorization requirements.</p>
+            <p>The course publisher and contributors do not authorize unlawful activity and do not grant permission to test any third-party system. Course materials are provided for lawful education and authorized security work only.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -284,7 +335,7 @@
   <footer>
     <div class="container footer-inner">
       <div>© 2026 CEH Academy · Educational use and authorized security testing only.</div>
-      <div class="footer-links"><a href="#curriculum">Curriculum</a><a href="#learning">Learning path</a><a href="LEGAL-DISCLAIMER.md">Legal disclaimer</a></div>
+      <div class="footer-links"><a href="#curriculum">Curriculum</a><a href="#learning">Learning path</a><a href="#legal-policy">Legal disclaimer</a></div>
     </div>
   </footer>
 </body>
