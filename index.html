@@ -100,6 +100,25 @@
       background: linear-gradient(145deg, rgba(20,34,56,.88), rgba(13,22,37,.94));
       transition: .2s ease; overflow: hidden;
     }
+    .week-group-card {
+      margin-bottom: 22px; padding: 24px;
+      border: 1px solid rgba(0,229,160,.38); border-radius: 20px;
+      background: linear-gradient(145deg, rgba(0,229,160,.055), rgba(16,26,43,.94) 42%);
+      box-shadow: var(--shadow);
+    }
+    .week-group-heading {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 18px; margin-bottom: 18px;
+    }
+    .week-group-heading h3 { margin: 5px 0 0; font-size: 19px; }
+    .week-group-heading p { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .week-group-tag {
+      flex: 0 0 auto; padding: 7px 10px; border: 1px solid rgba(0,229,160,.35);
+      border-radius: 999px; color: var(--green); font-size: 10px;
+      font-weight: 850; letter-spacing: .1em;
+    }
+    .week-group-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .week-grid-later { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     .week-card::after { content: ""; position: absolute; width: 90px; height: 90px; right: -45px; bottom: -48px; border-radius: 50%; background: rgba(0,184,255,.08); }
     .week-card:hover { transform: translateY(-4px); border-color: rgba(0,229,160,.65); box-shadow: 0 14px 32px rgba(0,0,0,.2); }
     .week-number { color: var(--green); font: 800 10px/1.2 "SFMono-Regular", Consolas, monospace; letter-spacing: .12em; }
@@ -120,7 +139,7 @@
     @media (max-width: 900px) {
       .hero-grid { grid-template-columns: 1fr; }
       .hero-panel { max-width: 540px; }
-      .week-grid { grid-template-columns: repeat(2, 1fr); }
+      .week-grid, .week-group-grid, .week-grid-later { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 620px) {
       .container { width: min(100% - 28px, 1120px); }
@@ -132,7 +151,11 @@
       .section { padding: 38px 0; }
       .section-heading { display: block; }
       .section-heading p { margin-top: 10px; }
-      .week-grid { gap: 10px; }
+      .week-grid, .week-group-grid, .week-grid-later { gap: 10px; }
+      .week-group-card { padding: 16px; }
+      .week-group-heading { align-items: flex-start; }
+      .week-group-heading h3 { font-size: 16px; }
+      .week-group-tag { font-size: 9px; }
       .week-card { min-height: 150px; padding: 14px; }
       .week-card h3 { font-size: 13px; }
       .feature-grid { grid-template-columns: 1fr; }
@@ -206,11 +229,23 @@
         <div><div class="section-kicker">The curriculum</div><h2>Your 16-week learning journey</h2></div>
         <p>Follow the course in sequence. Each week will lead to its lecture content, practical exercises, and assignment materials.</p>
       </div>
-      <div class="week-grid">
-        <a class="week-card" href="weeks/week-01.html"><div class="week-number">WEEK 01</div><h3>Introduction to Ethical Hacking & Lab Setup</h3><span>Foundations and environment</span></a>
-        <a class="week-card" href="weeks/week-02.html"><div class="week-number">WEEK 02</div><h3>Footprinting and Reconnaissance</h3><span>Information gathering</span></a>
-        <a class="week-card" href="weeks/week-03.html"><div class="week-number">WEEK 03</div><h3>Scanning Networks</h3><span>Network discovery and scanning</span></a>
-        <a class="week-card" href="weeks/week-04.html"><div class="week-number">WEEK 04</div><h3>Enumeration</h3><span>Identifying exposed information</span></a>
+      <div class="week-group-card">
+        <div class="week-group-heading">
+          <div>
+            <div class="section-kicker">Foundation module · Weeks 01–04</div>
+            <h3>Start with the fundamentals</h3>
+            <p>Build your ethical hacking foundation before moving into the next stages of the course.</p>
+          </div>
+          <span class="week-group-tag">MODULE 01</span>
+        </div>
+        <div class="week-group-grid">
+          <a class="week-card" href="weeks/week-01.html"><div class="week-number">WEEK 01</div><h3>Introduction to Ethical Hacking & Lab Setup</h3><span>Foundations and environment</span></a>
+          <a class="week-card" href="weeks/week-02.html"><div class="week-number">WEEK 02</div><h3>Footprinting and Reconnaissance</h3><span>Information gathering</span></a>
+          <a class="week-card" href="weeks/week-03.html"><div class="week-number">WEEK 03</div><h3>Scanning Networks</h3><span>Network discovery and scanning</span></a>
+          <a class="week-card" href="weeks/week-04.html"><div class="week-number">WEEK 04</div><h3>Enumeration</h3><span>Identifying exposed information</span></a>
+        </div>
+      </div>
+      <div class="week-grid-later">
         <a class="week-card" href="weeks/week-05.html"><div class="week-number">WEEK 05</div><h3>Vulnerability Analysis</h3><span>Finding and assessing weaknesses</span></a>
         <a class="week-card" href="weeks/week-06.html"><div class="week-number">WEEK 06</div><h3>System Hacking</h3><span>Access and system security</span></a>
         <a class="week-card" href="weeks/week-07.html"><div class="week-number">WEEK 07</div><h3>Malware Threats</h3><span>Threat concepts and safe analysis</span></a>
