@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CEH Academy Week 5: Vulnerability Analysis. Learn vulnerability assessment, CVSS, scanners, risk prioritization and remediation in an authorized lab.">
+<meta name="theme-color" content="#080d18">
+<link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/weeks/week-05.html">
+<title>Week 5: Vulnerability Analysis | CEH Academy</title>
+<style>
+    :root{--bg:#080d18;--surface:#101a2b;--surface2:#142238;--border:#263750;--text:#edf5ff;--muted:#9aabc2;--green:#00e5a0;--blue:#00b8ff;--danger:#ff647c}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 10% 0%,rgba(0,229,160,.08),transparent 35%),var(--bg);color:var(--text);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}.container{width:min(1240px,calc(100% - 48px));margin:auto}
+    header{position:sticky;top:0;z-index:5;background:rgba(8,13,24,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav{min-height:66px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:850;letter-spacing:.05em;color:var(--text)}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em}
+    .back{font-size:13px;font-weight:750}.hero{padding:58px 0 38px}.eyebrow,.tag{color:var(--green);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(34px,6vw,56px);line-height:1.08;letter-spacing:-.045em;margin:12px 0}.lead{max-width:720px;color:var(--muted);font-size:17px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.meta span{padding:7px 11px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.025);font-size:11px;color:var(--muted)}
+    .warning{margin:20px 0;padding:17px 19px;border:1px solid rgba(255,100,124,.4);border-radius:14px;background:rgba(255,100,124,.07);color:#d6dce6;font-size:13px}.warning strong{color:#ff8798}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;align-items:start;padding-bottom:60px}.toc{position:sticky;top:88px;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.toc strong{display:block;margin-bottom:10px}.toc a{display:block;padding:6px 0;color:var(--muted);font-size:12px}.toc a:hover{color:var(--green)}
+    section.topic{padding:25px;margin-bottom:17px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,rgba(20,34,56,.82),rgba(13,22,37,.92));scroll-margin-top:88px}
+    h2{font-size:23px;line-height:1.25;margin:0 0 17px;letter-spacing:-.025em}h3{font-size:16px;margin:23px 0 8px;color:var(--green)}h4{font-size:14px;margin:18px 0 7px}
+    p,li{color:#c4cfdd}ul,ol{padding-left:22px}li{margin:6px 0}strong{color:var(--text)}
+    .callout{padding:14px 16px;border-left:3px solid var(--blue);background:rgba(0,184,255,.07);border-radius:0 10px 10px 0;color:#c4cfdd;font-size:13px;margin:15px 0}
+    .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--green)}
+    pre{overflow-x:auto;padding:15px;border:1px solid #1b2b40;border-radius:11px;background:#070c14;color:#b9cce0;font:12px/1.7 "SFMono-Regular",Consolas,monospace}
+    .steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding:0 0 14px 42px}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--green);font-weight:850}
+    .assignment{border-color:rgba(0,229,160,.3)!important}.points{color:var(--green);font-size:12px;font-weight:800}
+    footer{border-top:1px solid var(--border);padding:25px 0;color:var(--muted);font-size:11px}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.toc{position:static}.toc nav{display:grid;grid-template-columns:repeat(2,1fr);gap:0 12px}.hero{padding-top:42px}section.topic{padding:19px}.nav{min-height:60px}}
+  </style>
+</head>
+<body>
+<header><div class="container nav"><a class="brand" href="../">CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></a><a class="back" href="../#curriculum">← Back to curriculum</a></div></header>
+<main class="container">
+<div class="hero">
+<div class="eyebrow">Vulnerability assessment module · Week 05</div>
+<h1>Vulnerability Analysis</h1>
+<p class="lead">Learn how security professionals identify, validate, classify, and prioritize weaknesses in systems, then turn technical findings into practical remediation plans.</p>
+<div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 5</span><span>ASSIGNMENT 5</span></div>
+<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Vulnerability scans can generate significant traffic, trigger alerts, or affect service availability. Scan only your own isolated Metasploitable VM or systems explicitly covered by prior written permission. Use non-destructive checks, follow the approved scope, and never attempt exploitation unless it is specifically authorized. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+</div>
+<div class="layout"><div>
+<section class="topic" id="topics"><div class="tag">01 · Overview</div><h2>Topics covered</h2><ul>
+<li>Vulnerability assessment concepts</li><li>Vulnerability classification and common identifiers</li><li>CVSS scoring and severity levels</li><li>Vulnerability assessment tools</li><li>Nessus and OpenVAS / Greenbone</li><li>Vulnerability management lifecycle</li><li>False positives and false negatives</li><li>Risk prioritization, remediation, and reporting</li>
+</ul></section>
+
+<section class="topic" id="definition"><div class="tag">02 · Core concept</div><h2>What is vulnerability analysis?</h2>
+<p><strong>Vulnerability analysis</strong> is the process of identifying, understanding, validating, and prioritizing weaknesses that could affect the confidentiality, integrity, or availability of systems and information. It helps an organization decide which security issues require attention first.</p>
+<h3>Vulnerability assessment vs. penetration testing</h3>
+<div class="table-wrap"><table><thead><tr><th>Vulnerability assessment</th><th>Penetration testing</th></tr></thead><tbody>
+<tr><td>Identifies and classifies potential weaknesses across a defined environment.</td><td>Tests whether selected weaknesses can be exploited within an approved scope.</td></tr>
+<tr><td>Usually emphasizes coverage, risk ranking, and remediation.</td><td>Usually emphasizes validated impact, attack paths, and security control effectiveness.</td></tr>
+<tr><td>Often uses automated scanners plus manual validation.</td><td>Requires additional manual testing and carefully controlled validation.</td></tr>
+</tbody></table></div>
+<p>Neither activity replaces the other. An organization may use regular vulnerability assessments to maintain visibility and periodic penetration tests to evaluate selected risks in greater depth.</p>
+<div class="callout"><strong>Important distinction:</strong> A scanner finding is not automatically a confirmed vulnerability. Results must be reviewed against the affected asset, software version, configuration, and available evidence.</div>
+</section>
+
+<section class="topic" id="sources"><div class="tag">03 · Vulnerability intelligence</div><h2>Where vulnerability information comes from</h2>
+<ul>
+<li><strong>CVE (Common Vulnerabilities and Exposures):</strong> A standardized identifier assigned to a publicly disclosed cybersecurity vulnerability.</li>
+<li><strong>NVD (National Vulnerability Database):</strong> A U.S. government resource that enriches vulnerability records with analysis, references, and scoring information.</li>
+<li><strong>Vendor security advisories:</strong> Official notices from software and hardware vendors describing affected products and fixes.</li>
+<li><strong>Security researcher disclosures:</strong> Technical reports that may provide details about a weakness and its impact.</li>
+<li><strong>Configuration and asset inventories:</strong> Internal records that help determine whether an organization actually uses an affected product or configuration.</li>
+</ul>
+<p>Useful reference sites:</p>
+<ul><li><a href="https://www.cve.org/" target="_blank" rel="noopener">CVE Program</a></li><li><a href="https://nvd.nist.gov/" target="_blank" rel="noopener">National Vulnerability Database</a></li><li><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA Known Exploited Vulnerabilities Catalog</a></li></ul>
+<p>Always check the vendor advisory and current asset details. A CVE may affect only specific product versions, configurations, or deployment conditions.</p>
+</section>
+
+<section class="topic" id="cvss"><div class="tag">04 · Risk scoring</div><h2>Common Vulnerability Scoring System (CVSS)</h2>
+<p><strong>CVSS</strong> is an open framework for describing the technical severity of vulnerabilities. The CVSS base score ranges from 0.0 to 10.0. It helps communicate severity, but it is not a complete measurement of business risk.</p>
+<div class="table-wrap"><table><thead><tr><th>CVSS v3.1 score</th><th>Severity</th><th>General meaning</th></tr></thead><tbody>
+<tr><td>0.0</td><td>None</td><td>No severity score assigned by the scale.</td></tr><tr><td>0.1–3.9</td><td>Low</td><td>Limited technical impact or exploit conditions.</td></tr><tr><td>4.0–6.9</td><td>Medium</td><td>Moderate technical severity.</td></tr><tr><td>7.0–8.9</td><td>High</td><td>Significant technical severity.</td></tr><tr><td>9.0–10.0</td><td>Critical</td><td>Very high technical severity.</td></tr>
+</tbody></table></div>
+<h3>CVSS v3.1 base metrics</h3>
+<div class="table-wrap"><table><thead><tr><th>Metric</th><th>What it measures</th><th>Examples of values</th></tr></thead><tbody>
+<tr><td><strong>Attack Vector (AV)</strong></td><td>How an attacker reaches the vulnerable component.</td><td>Network, Adjacent, Local, Physical</td></tr>
+<tr><td><strong>Attack Complexity (AC)</strong></td><td>Conditions beyond the attacker's control needed for exploitation.</td><td>Low, High</td></tr>
+<tr><td><strong>Privileges Required (PR)</strong></td><td>Privileges needed before exploitation.</td><td>None, Low, High</td></tr>
+<tr><td><strong>User Interaction (UI)</strong></td><td>Whether another user must take an action.</td><td>None, Required</td></tr>
+<tr><td><strong>Scope (S)</strong></td><td>Whether impact extends beyond the vulnerable component's security authority.</td><td>Unchanged, Changed</td></tr>
+<tr><td><strong>Confidentiality (C)</strong></td><td>Impact on information confidentiality.</td><td>None, Low, High</td></tr>
+<tr><td><strong>Integrity (I)</strong></td><td>Impact on information accuracy and trustworthiness.</td><td>None, Low, High</td></tr>
+<tr><td><strong>Availability (A)</strong></td><td>Impact on access to systems or information.</td><td>None, Low, High</td></tr>
+</tbody></table></div>
+<div class="callout">CVSS v3.1 is covered here because it is part of the course material. CVSS v4.0 is also available. Always state which CVSS version a score uses and consult the official specification when calculating or interpreting scores.</div>
+<h3>CVSS severity is not the same as business priority</h3>
+<p>A high CVSS score deserves attention, but remediation priority should also consider whether the asset is internet-facing, whether exploitation is known to occur, the value of the affected data, existing mitigations, and the organization's risk tolerance.</p>
+</section>
+
+<section class="topic" id="classification"><div class="tag">05 · Finding classification</div><h2>Understanding vulnerability findings</h2>
+<ul>
+<li><strong>Misconfiguration:</strong> A setting that weakens security, such as an unnecessary exposed service or overly broad permission.</li>
+<li><strong>Outdated software:</strong> A product version that no longer receives security updates or contains a known weakness.</li>
+<li><strong>Missing security patch:</strong> A vendor fix has not been applied to an affected asset.</li>
+<li><strong>Weak authentication:</strong> Authentication controls do not adequately protect access.</li>
+<li><strong>Excessive privilege:</strong> An account or service has more permissions than it needs.</li>
+<li><strong>Information disclosure:</strong> A system reveals information that should not be publicly accessible.</li>
+</ul>
+<h3>False positives and false negatives</h3>
+<div class="table-wrap"><table><thead><tr><th>Term</th><th>Meaning</th><th>Why it matters</th></tr></thead><tbody>
+<tr><td><strong>False positive</strong></td><td>A tool reports a vulnerability that is not actually present or applicable.</td><td>Can waste time and lead to unnecessary remediation.</td></tr>
+<tr><td><strong>False negative</strong></td><td>A real vulnerability exists but the assessment fails to identify it.</td><td>Can leave an organization exposed to risk.</td></tr>
+</tbody></table></div>
+<p>Validation can include checking the installed software version, vendor advisory, configuration, patch history, and scanner evidence. Do not prove a finding by exploiting a production system unless that activity is explicitly authorized and safely planned.</p>
+</section>
+
+<section class="topic" id="tools"><div class="tag">06 · Assessment tools</div><h2>Common vulnerability assessment tools</h2>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Type / purpose</th><th>Notes</th></tr></thead><tbody>
+<tr><td><strong>Nessus</strong></td><td>Vulnerability scanner by Tenable.</td><td>Offers different licensing options; check current product terms and limits.</td></tr>
+<tr><td><strong>Greenbone / OpenVAS</strong></td><td>Vulnerability management and scanning platform.</td><td>Open-source community components are available; deployment and feed setup require resources.</td></tr>
+<tr><td><strong>Qualys VMDR</strong></td><td>Cloud-based vulnerability management.</td><td>Commercial service with asset and risk management capabilities.</td></tr>
+<tr><td><strong>Nikto</strong></td><td>Web server assessment tool.</td><td>Can generate many HTTP requests; use only on authorized lab web servers.</td></tr>
+<tr><td><strong>Nmap</strong></td><td>Network discovery and service identification.</td><td>Useful for asset and service context; not a replacement for a full vulnerability management process.</td></tr>
+</tbody></table></div>
+<h3>Scanner limitations</h3>
+<ul><li>Scanners may not understand the full business context of an asset.</li><li>Version detection can be incomplete or inaccurate.</li><li>Authenticated scans may reveal configuration issues that unauthenticated scans miss.</li><li>Network filtering and unavailable services can limit visibility.</li><li>New vulnerabilities may not yet be represented in scanner checks.</li><li>Automated findings require human review and prioritization.</li></ul>
+</section>
+
+<section class="topic" id="lifecycle"><div class="tag">07 · Vulnerability management</div><h2>The vulnerability management lifecycle</h2>
+<ol><li><strong>Define scope:</strong> Identify approved assets, testing windows, methods, and exclusions.</li><li><strong>Discover assets:</strong> Maintain an accurate inventory of systems, software, and owners.</li><li><strong>Identify weaknesses:</strong> Use appropriate scanners, configuration reviews, and trusted advisories.</li><li><strong>Validate findings:</strong> Check evidence and determine whether each issue applies.</li><li><strong>Prioritize risk:</strong> Consider severity, exposure, known exploitation, business impact, and available mitigations.</li><li><strong>Remediate:</strong> Apply patches, change configurations, remove unnecessary services, or implement compensating controls.</li><li><strong>Retest:</strong> Confirm that the fix is effective and the finding is resolved.</li><li><strong>Report and improve:</strong> Record results, owners, deadlines, exceptions, and lessons learned.</li></ol>
+</section>
+
+<section class="topic" id="reporting"><div class="tag">08 · Professional reporting</div><h2>How to write a vulnerability report</h2>
+<p>A useful vulnerability report helps technical teams understand what was found, why it matters, and how to fix it. Each finding should be evidence-based and reproducible within the approved scope.</p>
+<div class="table-wrap"><table><thead><tr><th>Report field</th><th>What to include</th></tr></thead><tbody>
+<tr><td>Finding title</td><td>Short, clear description of the weakness.</td></tr><tr><td>Asset</td><td>Authorized hostname, asset identifier, and affected service.</td></tr><tr><td>Evidence</td><td>Relevant scanner output, version information, and safe supporting screenshots.</td></tr><tr><td>Reference</td><td>CVE or vendor advisory, where applicable.</td></tr><tr><td>Severity</td><td>CVSS score, version, and severity rating, if available.</td></tr><tr><td>Impact</td><td>Potential confidentiality, integrity, availability, or operational consequences.</td></tr><tr><td>Recommendation</td><td>Specific patch, configuration change, access restriction, or compensating control.</td></tr><tr><td>Status</td><td>Open, in progress, mitigated, fixed, accepted, or retest required.</td></tr></tbody></table></div>
+</section>
+
+<section class="topic" id="lab"><div class="tag">09 · Practical lab 5</div><h2>Vulnerability scanning and analysis</h2>
+<p><strong>Objectives</strong></p><ul><li>Understand how a vulnerability scanner works.</li><li>Run a controlled assessment against Metasploitable in your isolated lab.</li><li>Review vulnerability descriptions and CVSS scores.</li><li>Recognize possible false positives and scanner limitations.</li><li>Prepare a prioritized remediation report.</li></ul>
+<div class="callout"><strong>Lab safety:</strong> Use only your own Metasploitable VM on a private host-only or dedicated isolated virtual network. Confirm its IP address from the VM console. Do not scan public IP addresses, campus networks, or other devices. Use a conservative scan profile and avoid denial-of-service or exploit checks.</div>
+<h3>Step 1: Prepare the lab</h3>
+<ol class="steps">
+<li><strong>Confirm network isolation.</strong><p>Verify both virtual machines use the same isolated network and that Metasploitable is not using bridged networking. Take a clean snapshot before scanning.</p></li>
+<li><strong>Identify the lab target.</strong><p>Read the IP address from the Metasploitable console. In Kali, inspect the network configuration:</p><pre><code>ip addr</code></pre><p>Use only the address belonging to your own target VM.</p></li>
+</ol>
+<h3>Step 2: Use a vulnerability scanner</h3>
+<p>Choose one scanner that your computer can run reliably. Nessus and Greenbone can require significant memory and disk space; use a separate machine or an appropriately resourced lab if needed.</p>
+<ol class="steps">
+<li><strong>Nessus:</strong> Review the official <a href="https://www.tenable.com/products/nessus" target="_blank" rel="noopener">Nessus product page</a> for current editions, eligibility, licensing, and installation instructions. Install it only from Tenable's official distribution. The local interface commonly uses <code>https://localhost:8834</code>.</li>
+<li><strong>Configure a conservative scan:</strong> Create a basic network assessment using the lab target IP only. Leave credentials blank for an unauthenticated scan. Disable denial-of-service, destructive, and exploit-oriented checks. Review the scan settings before launching.</li>
+<li><strong>Alternative:</strong> Review the official <a href="https://greenbone.github.io/docs/" target="_blank" rel="noopener">Greenbone documentation</a> if you are using the Greenbone Community Edition. Follow its installation guidance and choose a safe assessment profile for the isolated target.</li>
+</ol>
+<h3>Step 3: Review results</h3>
+<ol class="steps">
+<li>Sort findings by severity and review the evidence for each result.</li>
+<li>Record the finding name, affected service, port, CVE reference if present, CVSS score, and scanner recommendation.</li>
+<li>Check whether the affected software or configuration is actually present on the lab target.</li>
+<li>Mark uncertain results as requiring validation; do not label them confirmed without evidence.</li>
+<li>Do not run exploit code or intrusive verification checks as part of this exercise.</li>
+</ol>
+<h3>Step 4: Optional web server review</h3>
+<p>If your isolated Metasploitable VM exposes a web server and your lab resources permit it, you may use Nikto for a basic, non-destructive configuration review against that lab web service only:</p>
+<pre><code>nikto -h http://&lt;LAB_TARGET_IP&gt; -output nikto-results.txt</code></pre>
+<p>Replace the placeholder only with the confirmed address of your own isolated lab target. Nikto can send numerous requests; do not run it against production or third-party websites.</p>
+<h3>Step 5: Prioritize and report</h3>
+<p>Create a table of the most important findings. Include severity, asset importance, exposure, evidence confidence, remediation, and retest status. Explain why the highest CVSS score is not necessarily the organization's highest business priority.</p>
+<h3>Expected outcomes</h3><ul><li>Completed scanner assessment of the isolated lab target.</li><li>Prioritized findings with CVSS scores where available.</li><li>At least one example of a result requiring validation.</li><li>Remediation recommendations for selected findings.</li><li>A professional vulnerability assessment report.</li></ul>
+</section>
+
+<section class="topic assignment" id="assignment"><div class="tag">10 · Assessment</div><h2>Assignment 5</h2>
+<h3>Part A: Vulnerability report <span class="points">(70 points)</span></h3>
+<p>Using only your isolated Metasploitable lab target, prepare a vulnerability assessment report. If fewer than 10 findings are returned, report the actual number; never invent results.</p>
+<ol><li>Identify and document up to 10 important findings from your scan.</li><li>For each finding, include its title, affected service or port, CVE reference if available, CVSS score and version, and severity.</li><li>Explain the potential impact in clear language.</li><li>Provide a specific remediation recommendation supported by a vendor advisory or trusted reference where possible.</li><li>Explain how you validated the result or why it remains unconfirmed.</li></ol>
+<h3>Part B: Analysis questions <span class="points">(30 points)</span></h3>
+<ol><li>What is the difference between a false positive and a false negative?</li><li>Why might an unauthenticated scan miss configuration or patch-related vulnerabilities?</li><li>How does CVSS help teams communicate technical severity?</li><li>Why should business context and known exploitation influence remediation priority?</li><li>Identify three limitations of automated vulnerability scanners.</li></ol>
+<div class="callout"><strong>Submission format:</strong> Professional PDF report, approximately 5–10 pages. Include the scope, lab setup, scan methodology, selected evidence, prioritization, remediation plan, and references. Include only data from your authorized lab.</div>
+</section>
+</div></div>
+</main>
+<footer><div class="container">© 2026 CEH Academy · Educational use and authorized security testing only. · <a href="../#legal-policy">Legal disclaimer</a></div></footer>
+</body></html>
