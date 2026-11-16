@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CEH Academy Week 4: Enumeration. Learn SMB, SNMP, LDAP, DNS, NFS and RPC concepts with a controlled practical lab.">
+<meta name="theme-color" content="#080d18">
+<link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/weeks/week-04.html">
+<title>Week 4: Enumeration | CEH Academy</title>
+<style>
+    :root{--bg:#080d18;--surface:#101a2b;--surface2:#142238;--border:#263750;--text:#edf5ff;--muted:#9aabc2;--green:#00e5a0;--blue:#00b8ff;--danger:#ff647c}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 10% 0%,rgba(0,229,160,.08),transparent 35%),var(--bg);color:var(--text);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}.container{width:min(1240px,calc(100% - 48px));margin:auto}
+    header{position:sticky;top:0;z-index:5;background:rgba(8,13,24,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav{min-height:66px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:850;letter-spacing:.05em;color:var(--text)}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em}
+    .back{font-size:13px;font-weight:750}.hero{padding:58px 0 38px}.eyebrow,.tag{color:var(--green);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(34px,6vw,56px);line-height:1.08;letter-spacing:-.045em;margin:12px 0}.lead{max-width:720px;color:var(--muted);font-size:17px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.meta span{padding:7px 11px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.025);font-size:11px;color:var(--muted)}
+    .warning{margin:20px 0;padding:17px 19px;border:1px solid rgba(255,100,124,.4);border-radius:14px;background:rgba(255,100,124,.07);color:#d6dce6;font-size:13px}.warning strong{color:#ff8798}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;align-items:start;padding-bottom:60px}.toc{position:sticky;top:88px;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.toc strong{display:block;margin-bottom:10px}.toc a{display:block;padding:6px 0;color:var(--muted);font-size:12px}.toc a:hover{color:var(--green)}
+    section.topic{padding:25px;margin-bottom:17px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,rgba(20,34,56,.82),rgba(13,22,37,.92));scroll-margin-top:88px}
+    h2{font-size:23px;line-height:1.25;margin:0 0 17px;letter-spacing:-.025em}h3{font-size:16px;margin:23px 0 8px;color:var(--green)}h4{font-size:14px;margin:18px 0 7px}
+    p,li{color:#c4cfdd}ul,ol{padding-left:22px}li{margin:6px 0}strong{color:var(--text)}
+    .callout{padding:14px 16px;border-left:3px solid var(--blue);background:rgba(0,184,255,.07);border-radius:0 10px 10px 0;color:#c4cfdd;font-size:13px;margin:15px 0}
+    .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--green)}
+    pre{overflow-x:auto;padding:15px;border:1px solid #1b2b40;border-radius:11px;background:#070c14;color:#b9cce0;font:12px/1.7 "SFMono-Regular",Consolas,monospace}
+    .steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding:0 0 14px 42px}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--green);font-weight:850}
+    .assignment{border-color:rgba(0,229,160,.3)!important}.points{color:var(--green);font-size:12px;font-weight:800}
+    footer{border-top:1px solid var(--border);padding:25px 0;color:var(--muted);font-size:11px}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.toc{position:static}.toc nav{display:grid;grid-template-columns:repeat(2,1fr);gap:0 12px}.hero{padding-top:42px}section.topic{padding:19px}.nav{min-height:60px}}
+  </style>
+</head>
+<body>
+<header><div class="container nav"><a class="brand" href="../">CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></a><a class="back" href="../#curriculum">← Back to curriculum</a></div></header>
+<main class="container">
+<div class="hero">
+<div class="eyebrow">Foundation module · Week 04</div>
+<h1>Enumeration</h1>
+<p class="lead">Learn how network services expose structured information, understand common enumeration protocols, and document service configurations safely in an isolated lab.</p>
+<div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 4</span><span>ASSIGNMENT 4</span></div>
+<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Enumeration can reveal usernames, shares, system details, and other sensitive information. Run all practical commands only against your own isolated Metasploitable VM or targets explicitly covered by prior written permission. Do not attempt password guessing, credential attacks, or access to third-party data. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+</div>
+<div class="layout"><div>
+<section class="topic" id="topics"><div class="tag">01 · Overview</div><h2>Topics covered</h2><ul>
+<li>Enumeration concepts and methodology</li><li>NetBIOS and SMB fundamentals</li><li>SNMP concepts and security</li><li>LDAP directory services</li><li>NTP and time synchronization</li><li>SMTP, POP3, and IMAP service information</li><li>NFS and RPC fundamentals</li><li>DNS records and zone-transfer security</li>
+</ul></section>
+
+<section class="topic" id="definition"><div class="tag">02 · Core concept</div><h2>What is enumeration?</h2>
+<p><strong>Enumeration</strong> is the structured process of collecting detailed information from services and systems that respond to authorized requests. It builds on network scanning: scanning may identify an open service, while enumeration helps determine what information that service makes available.</p>
+<h3>Information that may be exposed</h3><ul><li>Hostnames and device information.</li><li>Shared folders and access permissions.</li><li>Directory structure and group information.</li><li>Service configuration and software details.</li><li>Network time and infrastructure details.</li><li>Publicly available DNS and mail configuration.</li></ul>
+<div class="callout">Enumeration findings must be handled as potentially sensitive. Record only what is necessary for the assessment, avoid collecting personal or confidential data, and do not attempt to bypass access controls.</div>
+</section>
+
+<section class="topic" id="smb"><div class="tag">03 · Windows networking</div><h2>NetBIOS and SMB enumeration</h2>
+<p><strong>Server Message Block (SMB)</strong> is a network protocol commonly used for file and printer sharing. NetBIOS over TCP/IP is associated with legacy Windows networking and name services.</p>
+<div class="table-wrap"><table><thead><tr><th>Port</th><th>Service</th><th>Purpose</th></tr></thead><tbody><tr><td>137/UDP</td><td>NetBIOS Name Service</td><td>Name registration and resolution.</td></tr><tr><td>138/UDP</td><td>NetBIOS Datagram Service</td><td>Connectionless datagram communication.</td></tr><tr><td>139/TCP</td><td>NetBIOS Session Service</td><td>Session-based communication, including legacy SMB.</td></tr><tr><td>445/TCP</td><td>SMB</td><td>Direct-hosted SMB file and printer sharing.</td></tr></tbody></table></div>
+<h3>Defensive considerations</h3><ul><li>Disable SMBv1 where it is no longer required.</li><li>Restrict SMB access to trusted networks and authorized devices.</li><li>Require strong authentication and least-privilege share permissions.</li><li>Monitor unusual access to shared folders.</li></ul>
+</section>
+
+<section class="topic" id="snmp"><div class="tag">04 · Network management</div><h2>SNMP enumeration</h2>
+<p><strong>Simple Network Management Protocol (SNMP)</strong> helps administrators monitor and manage network devices. Depending on configuration, it can expose device names, interface information, uptime, and performance data.</p>
+<div class="table-wrap"><table><thead><tr><th>Version</th><th>Security notes</th></tr></thead><tbody><tr><td>SNMPv1</td><td>Legacy version; community strings are transmitted without modern encryption.</td></tr><tr><td>SNMPv2c</td><td>Adds protocol improvements but still relies on community strings.</td></tr><tr><td>SNMPv3</td><td>Supports authentication and privacy protections when correctly configured.</td></tr></tbody></table></div>
+<p>Community strings are shared values used by older SNMP versions. Default or guessable values can expose management information. Avoid testing community strings against systems you do not own.</p>
+<h3>Defensive best practices</h3><ul><li>Prefer SNMPv3 with authentication and encryption.</li><li>Restrict management access using network ACLs.</li><li>Change default credentials and community strings.</li><li>Use read-only access wherever possible.</li><li>Monitor and log management queries.</li></ul>
+</section>
+
+<section class="topic" id="ldap"><div class="tag">05 · Directory services</div><h2>LDAP enumeration</h2>
+<p><strong>Lightweight Directory Access Protocol (LDAP)</strong> is used to access and manage directory information such as users, groups, devices, and organizational objects. Organizations often use directory services to support centralized identity and access management.</p>
+<div class="table-wrap"><table><thead><tr><th>Port</th><th>Common use</th></tr></thead><tbody><tr><td>389/TCP</td><td>LDAP; encryption should be provided through StartTLS or a protected channel.</td></tr><tr><td>636/TCP</td><td>LDAP over TLS (commonly called LDAPS).</td></tr></tbody></table></div>
+<p>Directory queries should be limited to approved accounts and attributes. Anonymous directory access should be disabled unless there is a documented business requirement.</p>
+</section>
+
+<section class="topic" id="mail"><div class="tag">06 · Mail services</div><h2>SMTP, POP3, and IMAP</h2>
+<div class="table-wrap"><table><thead><tr><th>Protocol</th><th>Common port</th><th>Purpose</th></tr></thead><tbody><tr><td>SMTP</td><td>25, 587, 465</td><td>Sending and relaying email.</td></tr><tr><td>POP3</td><td>110, 995</td><td>Retrieving email, with 995 commonly used for TLS-protected POP3.</td></tr><tr><td>IMAP</td><td>143, 993</td><td>Accessing and synchronizing mailbox contents, with 993 commonly used for TLS-protected IMAP.</td></tr></tbody></table></div>
+<p>Mail servers may publish configuration information through DNS and service banners. Modern servers should use encrypted connections, strong authentication, anti-relay controls, and appropriate logging.</p>
+<div class="callout">Do not use VRFY, EXPN, or similar commands to harvest real user accounts. In this lesson, understand their purpose and the privacy risks they can create; use only a deliberately configured test service if a practical demonstration is required.</div>
+</section>
+
+<section class="topic" id="nfs"><div class="tag">07 · File sharing and remote procedure calls</div><h2>NFS and RPC</h2>
+<p><strong>Network File System (NFS)</strong> allows systems to share directories over a network. <strong>Remote Procedure Call (RPC)</strong> enables a program to request a service from another system.</p>
+<div class="table-wrap"><table><thead><tr><th>Service</th><th>Typical port</th><th>Purpose</th></tr></thead><tbody><tr><td>NFS</td><td>2049</td><td>Network file sharing.</td></tr><tr><td>rpcbind / portmapper</td><td>111</td><td>Helps clients locate RPC services.</td></tr></tbody></table></div>
+<h3>Defensive best practices</h3><ul><li>Export only required NFS directories.</li><li>Restrict NFS access to trusted hosts and networks.</li><li>Apply least-privilege permissions and appropriate identity mapping.</li><li>Disable unnecessary RPC services.</li><li>Monitor unexpected access to shared resources.</li></ul>
+</section>
+
+<section class="topic" id="dns"><div class="tag">08 · DNS security</div><h2>DNS zone transfers</h2>
+<p>A <strong>DNS zone transfer</strong> copies DNS zone information from an authoritative DNS server to another server, commonly to keep DNS infrastructure synchronized. An improperly restricted transfer can disclose a large amount of domain infrastructure information.</p>
+<p>Zone transfers should be allowed only to explicitly authorized secondary DNS servers. Administrators should restrict transfer sources, monitor requests, and review DNS provider settings.</p>
+<div class="callout"><strong>Important:</strong> Do not attempt AXFR requests against public or third-party domains without explicit written permission. For this lesson, inspect the concept using a local DNS server that you control or review a sample zone file.</div>
+</section>
+
+<section class="topic" id="tools"><div class="tag">09 · Tool awareness</div><h2>Common enumeration tools</h2>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Purpose</th><th>Safe-use note</th></tr></thead><tbody>
+<tr><td><strong>smbclient</strong></td><td>Connects to SMB shares and lists available resources.</td><td>Use only with a lab account and authorized shares.</td></tr>
+<tr><td><strong>enum4linux</strong></td><td>Collects SMB and Windows-related information.</td><td>Can expose user and share details; restrict to your lab.</td></tr>
+<tr><td><strong>snmpwalk</strong></td><td>Queries SNMP management information.</td><td>Use a test device with credentials you control.</td></tr>
+<tr><td><strong>ldapsearch</strong></td><td>Queries LDAP directory entries.</td><td>Use a local test directory and approved bind account.</td></tr>
+<tr><td><strong>rpcinfo</strong></td><td>Displays RPC service information.</td><td>Query only a host inside your authorized lab.</td></tr>
+<tr><td><strong>showmount</strong></td><td>Displays NFS export information.</td><td>Use a lab NFS server you control.</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="topic" id="lab"><div class="tag">10 · Practical lab 4</div><h2>Service enumeration in an isolated lab</h2>
+<p><strong>Objectives</strong></p><ul><li>Understand what service enumeration reveals.</li><li>Review SMB and service information on the lab target.</li><li>Explore SNMP and RPC concepts in a controlled environment.</li><li>Document findings without collecting unnecessary sensitive data.</li></ul>
+<div class="callout"><strong>Lab scope:</strong> Use only your own Metasploitable VM on a private host-only or dedicated isolated network. Confirm its IP address from the VM console. Do not connect the vulnerable VM to a bridged network or the public internet.</div>
+<ol class="steps">
+<li><strong>Confirm the target address.</strong><p>On Kali, inspect the network interface and compare it with the address shown in your Metasploitable console:</p><pre><code>ip addr</code></pre></li>
+<li><strong>Review SMB service information.</strong><p>On your isolated lab target, use a non-authenticated share listing to see what the service intentionally exposes in this training VM:</p><pre><code>smbclient -L //<LAB_TARGET_IP>/ -N</code></pre><p>Do not open or copy files that contain personal or confidential information.</p></li>
+<li><strong>Review SMB service identification.</strong><pre><code>nmap -sV -p 139,445 <LAB_TARGET_IP></code></pre><p>Record the service state and version information returned by the scan.</p></li>
+<li><strong>Review RPC service information.</strong><pre><code>rpcinfo -p <LAB_TARGET_IP></code></pre><p>Use the output to identify which RPC programs are advertised by the lab host.</p></li>
+<li><strong>Document the remaining protocols.</strong><p>For SNMP, LDAP, NFS, and mail services, explain what information each protocol can expose and how an administrator should secure it. Do not attempt credential guessing, user harvesting, or access to private shares.</p></li>
+<li><strong>Write a defensive summary.</strong><p>For every observed service, state whether it is required, who should be allowed to access it, and one control that would reduce unnecessary exposure.</p></li>
+</ol>
+<h3>Expected outcomes</h3><ul><li>SMB service information documented.</li><li>RPC service information documented where available.</li><li>SNMP, LDAP, mail, and NFS risks explained.</li><li>Defensive recommendations prepared.</li></ul>
+</section>
+
+<section class="topic assignment" id="assignment"><div class="tag">11 · Assessment</div><h2>Assignment 4</h2>
+<h3>Part A: Enumeration report <span class="points">(60 points)</span></h3><ol><li>Explain how enumeration differs from network scanning.</li><li>Describe SMB, SNMP, LDAP, SMTP, NFS, and RPC and the information each may expose.</li><li>Document the SMB and RPC observations from your isolated lab, if those services are available.</li><li>Explain why default SNMP community strings and unrestricted directory access are risky.</li><li>Describe the purpose of DNS zone transfers and how administrators restrict them.</li></ol>
+<h3>Part B: Defensive analysis <span class="points">(40 points)</span></h3><ol><li>Recommend three controls to protect SMB shares.</li><li>Explain why SNMPv3 is preferable to older community-string versions.</li><li>Recommend safe LDAP access and transport protections.</li><li>Explain how NFS export restrictions reduce risk.</li><li>Describe what evidence should be preserved and reported during an authorized assessment.</li></ol>
+<div class="callout"><strong>Submission format:</strong> Professional PDF report with a scope statement, lab screenshots, selected command output, analysis, and defensive recommendations. Do not include third-party data or credentials.</div>
+</section>
+</div></div>
+</main>
+<footer><div class="container">© 2026 CEH Academy · Educational use and authorized security testing only. · <a href="../#legal-policy">Legal disclaimer</a></div></footer>
+</body></html>
