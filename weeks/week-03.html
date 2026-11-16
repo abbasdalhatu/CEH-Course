@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CEH Academy Week 3: Scanning Networks. Network discovery, port states, TCP fundamentals, Nmap and an isolated practical lab.">
+<meta name="theme-color" content="#080d18">
+<link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/weeks/week-03.html">
+<title>Week 3: Scanning Networks | CEH Academy</title>
+<style>
+    :root{--bg:#080d18;--surface:#101a2b;--surface2:#142238;--border:#263750;--text:#edf5ff;--muted:#9aabc2;--green:#00e5a0;--blue:#00b8ff;--danger:#ff647c}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 10% 0%,rgba(0,229,160,.08),transparent 35%),var(--bg);color:var(--text);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}.container{width:min(1240px,calc(100% - 48px));margin:auto}
+    header{position:sticky;top:0;z-index:5;background:rgba(8,13,24,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav{min-height:66px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:850;letter-spacing:.05em;color:var(--text)}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em}
+    .back{font-size:13px;font-weight:750}.hero{padding:58px 0 38px}.eyebrow,.tag{color:var(--green);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(34px,6vw,56px);line-height:1.08;letter-spacing:-.045em;margin:12px 0}.lead{max-width:720px;color:var(--muted);font-size:17px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.meta span{padding:7px 11px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.025);font-size:11px;color:var(--muted)}
+    .warning{margin:20px 0;padding:17px 19px;border:1px solid rgba(255,100,124,.4);border-radius:14px;background:rgba(255,100,124,.07);color:#d6dce6;font-size:13px}.warning strong{color:#ff8798}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;align-items:start;padding-bottom:60px}.toc{position:sticky;top:88px;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.toc strong{display:block;margin-bottom:10px}.toc a{display:block;padding:6px 0;color:var(--muted);font-size:12px}.toc a:hover{color:var(--green)}
+    section.topic{padding:25px;margin-bottom:17px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,rgba(20,34,56,.82),rgba(13,22,37,.92));scroll-margin-top:88px}
+    h2{font-size:23px;line-height:1.25;margin:0 0 17px;letter-spacing:-.025em}h3{font-size:16px;margin:23px 0 8px;color:var(--green)}h4{font-size:14px;margin:18px 0 7px}
+    p,li{color:#c4cfdd}ul,ol{padding-left:22px}li{margin:6px 0}strong{color:var(--text)}
+    .callout{padding:14px 16px;border-left:3px solid var(--blue);background:rgba(0,184,255,.07);border-radius:0 10px 10px 0;color:#c4cfdd;font-size:13px;margin:15px 0}
+    .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--green)}
+    pre{overflow-x:auto;padding:15px;border:1px solid #1b2b40;border-radius:11px;background:#070c14;color:#b9cce0;font:12px/1.7 "SFMono-Regular",Consolas,monospace}
+    .steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding:0 0 14px 42px}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--green);font-weight:850}
+    .assignment{border-color:rgba(0,229,160,.3)!important}.points{color:var(--green);font-size:12px;font-weight:800}
+    footer{border-top:1px solid var(--border);padding:25px 0;color:var(--muted);font-size:11px}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.toc{position:static}.toc nav{display:grid;grid-template-columns:repeat(2,1fr);gap:0 12px}.hero{padding-top:42px}section.topic{padding:19px}.nav{min-height:60px}}
+  </style>
+</head>
+<body>
+<header><div class="container nav"><a class="brand" href="../">CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></a><a class="back" href="../#curriculum">← Back to curriculum</a></div></header>
+<main class="container">
+<div class="hero">
+<div class="eyebrow">Foundation module · Week 03</div>
+<h1>Scanning Networks</h1>
+<p class="lead">Understand how network discovery and port scanning work, interpret service information, and use Nmap responsibly inside a controlled lab environment.</p>
+<div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 3</span><span>ASSIGNMENT 3</span></div>
+<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Scanning sends traffic to other systems and may trigger alerts or disrupt services. Run the practical exercises only against your own isolated Metasploitable VM or targets explicitly covered by prior written permission. Never scan public IP ranges, campus networks, or third-party systems without clear authorization. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+</div>
+<div class="layout"><div>
+<section class="topic" id="topics"><div class="tag">01 · Overview</div><h2>Topics covered</h2><ul>
+<li>Network scanning concepts and purpose</li><li>Host discovery in an authorized network</li><li>TCP and UDP port scanning fundamentals</li><li>Service and version identification</li><li>Operating-system detection concepts</li><li>Understanding Nmap output and port states</li><li>Saving and documenting scan results</li>
+</ul></section>
+
+<section class="topic" id="scanning"><div class="tag">02 · Core concept</div><h2>What is network scanning?</h2>
+<p><strong>Network scanning</strong> is the process of sending network requests to identify reachable hosts, accessible ports, and services. During an authorized security assessment, scan results help administrators understand which services are exposed and whether they match the organization's security baseline.</p>
+<h3>Common stages</h3><ol><li><strong>Host discovery:</strong> Determine which approved devices are reachable.</li><li><strong>Port discovery:</strong> Identify ports that respond to probes.</li><li><strong>Service identification:</strong> Determine which application or protocol is associated with a port.</li><li><strong>Version identification:</strong> Collect service-version information when permitted.</li><li><strong>Analysis:</strong> Compare findings with the approved baseline and document potential risks.</li></ol>
+<div class="callout">A scan result is an observation, not proof that a system is vulnerable. Validate findings carefully and avoid intrusive checks unless the written scope explicitly allows them.</div>
+</section>
+
+<section class="topic" id="tcp"><div class="tag">03 · Networking foundations</div><h2>TCP three-way handshake</h2>
+<p>TCP establishes a connection through a three-step exchange:</p>
+<pre><code>Client                         Server
+  | -------- SYN -------------> |
+  | <------ SYN + ACK --------- |
+  | -------- ACK -------------> |
+  |                             |
+  |       Connection ready      |</code></pre>
+<ul><li><strong>SYN:</strong> The client requests to begin a connection.</li><li><strong>SYN-ACK:</strong> The server acknowledges and responds with its own synchronization request.</li><li><strong>ACK:</strong> The client acknowledges the response and the connection is established.</li></ul>
+<h3>TCP and UDP</h3>
+<div class="table-wrap"><table><thead><tr><th>TCP</th><th>UDP</th></tr></thead><tbody><tr><td>Connection-oriented and uses acknowledgements and sequencing.</td><td>Connectionless; does not establish a TCP-style session.</td></tr><tr><td>Commonly used by HTTPS, SSH, and email services.</td><td>Commonly used by DNS queries, streaming, and real-time applications.</td></tr><tr><td>Connection behavior can provide useful information during port scanning.</td><td>Responses may be absent, so interpreting scan results can be less straightforward.</td></tr></tbody></table></div>
+</section>
+
+<section class="topic" id="ports"><div class="tag">04 · Port awareness</div><h2>Common ports and services</h2>
+<div class="table-wrap"><table><thead><tr><th>Port</th><th>Protocol / Service</th><th>Typical purpose</th></tr></thead><tbody>
+<tr><td>21</td><td>FTP</td><td>File transfer</td></tr><tr><td>22</td><td>SSH</td><td>Secure remote administration</td></tr><tr><td>23</td><td>Telnet</td><td>Legacy remote terminal access</td></tr><tr><td>25</td><td>SMTP</td><td>Email transfer</td></tr><tr><td>53</td><td>DNS</td><td>Domain name resolution</td></tr><tr><td>80</td><td>HTTP</td><td>Web traffic</td></tr><tr><td>110</td><td>POP3</td><td>Email retrieval</td></tr><tr><td>143</td><td>IMAP</td><td>Email access</td></tr><tr><td>443</td><td>HTTPS</td><td>Encrypted web traffic</td></tr><tr><td>445</td><td>SMB</td><td>File and printer sharing</td></tr><tr><td>3306</td><td>MySQL</td><td>Database service</td></tr><tr><td>3389</td><td>RDP</td><td>Remote desktop</td></tr><tr><td>5432</td><td>PostgreSQL</td><td>Database service</td></tr><tr><td>5900</td><td>VNC</td><td>Remote desktop sharing</td></tr><tr><td>8080</td><td>HTTP alternate</td><td>Web proxy or alternate web service</td></tr>
+</tbody></table></div>
+<p>Port numbers are conventions, not guarantees. A service can run on a non-standard port, and an open port does not automatically mean that the service is insecure.</p>
+</section>
+
+<section class="topic" id="states"><div class="tag">05 · Interpreting results</div><h2>Nmap port states</h2>
+<div class="table-wrap"><table><thead><tr><th>State</th><th>Meaning</th><th>Interpretation</th></tr></thead><tbody>
+<tr><td><strong>Open</strong></td><td>An application is accepting connections on the port.</td><td>Identify the service and confirm whether it should be exposed.</td></tr>
+<tr><td><strong>Closed</strong></td><td>The host responds, but no application is listening on that port.</td><td>The host is reachable; the port is not accepting connections.</td></tr>
+<tr><td><strong>Filtered</strong></td><td>A filtering device prevents Nmap from determining whether the port is open.</td><td>Firewall rules or network filtering may be involved.</td></tr>
+<tr><td><strong>Unfiltered</strong></td><td>The port is reachable, but Nmap cannot determine whether it is open or closed from that scan.</td><td>Requires context from the scan method and network.</td></tr>
+<tr><td><strong>Open|Filtered</strong></td><td>Nmap cannot distinguish an open port from a filtered one.</td><td>Common in UDP scanning when no response is received.</td></tr>
+<tr><td><strong>Closed|Filtered</strong></td><td>Nmap cannot distinguish a closed port from a filtered one.</td><td>Interpret only in the context of the scan type.</td></tr>
+</tbody></table></div>
+</section>
+
+<section class="topic" id="nmap"><div class="tag">06 · Tool fundamentals</div><h2>Nmap command essentials</h2>
+<p>Nmap is a network exploration and security auditing tool. Use the following commands only with an authorized target. In this course, replace the placeholder with the IP address shown on your own isolated Metasploitable VM.</p>
+<div class="callout"><strong>Target placeholder:</strong> <code>&lt;LAB_TARGET_IP&gt;</code> means the confirmed IP address of your own lab target. Do not copy a random IP address from the internet.</div>
+<h3>Basic discovery and scanning</h3><pre><code># Check Nmap version
+nmap --version
+
+# Scan the default common TCP ports on your lab target
+nmap &lt;LAB_TARGET_IP&gt;
+
+# Discover hosts on your isolated lab subnet only
+nmap -sn &lt;YOUR_ISOLATED_LAB_SUBNET&gt;
+
+# Scan selected ports
+nmap -p 22,80,443 &lt;LAB_TARGET_IP&gt;
+
+# Identify services and versions
+nmap -sV &lt;LAB_TARGET_IP&gt;
+
+# Save normal output to a text file
+nmap -oN lab-scan.txt &lt;LAB_TARGET_IP&gt;</code></pre>
+<h3>Understanding scan options</h3>
+<div class="table-wrap"><table><thead><tr><th>Option</th><th>Purpose</th></tr></thead><tbody><tr><td><code>-sn</code></td><td>Host discovery without a port scan.</td></tr><tr><td><code>-p</code></td><td>Selects specific ports or a port range.</td></tr><tr><td><code>-sV</code></td><td>Attempts to identify service versions.</td></tr><tr><td><code>-sT</code></td><td>Uses TCP connect scanning.</td></tr><tr><td><code>-sU</code></td><td>Performs UDP scanning; can be slower and needs careful interpretation.</td></tr><tr><td><code>-oN</code></td><td>Saves output in normal text format.</td></tr><tr><td><code>-oX</code></td><td>Saves output in XML format.</td></tr><tr><td><code>-oA</code></td><td>Saves output in multiple formats.</td></tr></tbody></table></div>
+<p>Do not use scan-fragmentation, decoys, source-port manipulation, or other evasion options to conceal scanning. This course focuses on transparent, authorized testing and accurate reporting.</p>
+</section>
+
+<section class="topic" id="lab"><div class="tag">07 · Practical lab 3</div><h2>Network scanning with Nmap</h2>
+<p><strong>Objectives</strong></p><ul><li>Confirm the IP address of your isolated lab target.</li><li>Perform a basic host and port scan.</li><li>Identify service names and versions.</li><li>Interpret Nmap port states.</li><li>Save and explain scan results.</li></ul>
+<div class="callout"><strong>Isolation check:</strong> Confirm that Kali and Metasploitable are connected to the same private host-only or dedicated isolated virtual network. Do not use bridged networking for the intentionally vulnerable target.</div>
+<ol class="steps">
+<li><strong>Confirm the lab target address.</strong><p>Open the Metasploitable console and identify its IP address. In Kali, check the interface configuration:</p><pre><code>ip addr</code></pre><p>Make sure the target address belongs to your own lab VM before proceeding.</p></li>
+<li><strong>Check reachability.</strong><pre><code>ping &lt;LAB_TARGET_IP&gt;</code></pre><p>If there is no response, review the VM network adapters and firewall settings. Some hosts may block ping, so a failed ping alone does not prove the host is offline.</p></li>
+<li><strong>Run a basic port scan.</strong><pre><code>nmap &lt;LAB_TARGET_IP&gt;</code></pre><p>Record the port numbers, states, and service names that Nmap reports.</p></li>
+<li><strong>Identify service versions.</strong><pre><code>nmap -sV &lt;LAB_TARGET_IP&gt;</code></pre><p>Review the service information. Version detection can generate additional requests, so keep it limited to your isolated lab target.</p></li>
+<li><strong>Save your results.</strong><pre><code>nmap -sV -oA week3-lab-results &lt;LAB_TARGET_IP&gt;</code></pre><p>This saves results in normal, XML, and grepable formats. Keep the files with your lab report.</p></li>
+<li><strong>Analyze and document.</strong><p>For each result, explain what the port is commonly used for, whether it should be available in the lab, and what defensive steps an administrator could consider.</p></li>
+</ol>
+<h3>Expected outcomes</h3><ul><li>Confirmed isolated lab target IP.</li><li>Basic Nmap scan completed against the lab VM.</li><li>Service and version observations documented.</li><li>Port states explained correctly.</li><li>Scan output saved for the assignment.</li></ul>
+</section>
+
+<section class="topic assignment" id="assignment"><div class="tag">08 · Assessment</div><h2>Assignment 3</h2>
+<h3>Part A: Scanning analysis <span class="points">(50 points)</span></h3><ol><li>Explain the difference between host discovery and port scanning.</li><li>Describe the TCP three-way handshake.</li><li>Explain the Nmap states: open, closed, filtered, and open|filtered.</li><li>Compare TCP connect scanning and UDP scanning at a conceptual level.</li><li>Explain why a service version result should be verified before drawing conclusions about vulnerability.</li></ol>
+<h3>Part B: Nmap lab report <span class="points">(50 points)</span></h3><p>Using only your isolated Metasploitable lab target:</p><ol><li>Perform a basic Nmap scan and a service-version scan.</li><li>Identify at least 10 observed ports if available; do not invent results if fewer are found.</li><li>For each observed port, document its number, protocol, state, service name, and version if identified.</li><li>Choose three services and describe one defensive best practice for each.</li><li>Include the saved Nmap output and screenshots that show the lab target and isolated network.</li></ol>
+<div class="callout"><strong>Submission format:</strong> PDF report with screenshots, scan outputs, scope statement, and analysis. Use only your authorized isolated lab. Never include results from public or third-party systems.</div>
+</section>
+</div></div>
+</main>
+<footer><div class="container">© 2026 CEH Academy · Educational use and authorized security testing only. · <a href="../#legal-policy">Legal disclaimer</a></div></footer>
+</body></html>
