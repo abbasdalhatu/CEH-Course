@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="CEH Academy Week 6: System Hacking. Study credential security, privilege boundaries, system auditing, persistence threats, anti-forensics and defensive controls.">
+<meta name="description" content="CEH Academy Week 6: System Hacking — lecture notes, credential security, privilege escalation, system auditing, and practical lab.">
 <meta name="theme-color" content="#080d18">
 <link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/weeks/week-06.html">
 <title>Week 6: System Hacking | CEH Academy</title>
@@ -33,169 +33,135 @@
 <header><div class="container nav"><a class="brand" href="../">CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></a><a class="back" href="../#curriculum">← Back to curriculum</a></div></header>
 <main class="container">
 <div class="hero">
-<div class="eyebrow">Host security module · Week 06</div>
+<div class="eyebrow">System security module · Week 06</div>
 <h1>System Hacking</h1>
-<p class="lead">Understand how attackers target user accounts and operating systems, and learn how defenders audit credentials, detect privilege abuse, investigate persistence, and protect system integrity.</p>
+<p class="lead">Understand credential attacks, privilege escalation, application execution, hidden files, rootkits, steganography and anti-forensics—and learn how defenders detect and prevent system compromise.</p>
 <div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 6</span><span>ASSIGNMENT 6</span></div>
-<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> System access, password testing, privilege checks, and forensic inspection must be limited to machines and accounts you own or systems explicitly covered by prior written permission. This lesson uses defensive inspection and synthetic training data. It does not authorize credential theft, unauthorized access, persistence, log deletion, or concealment of activity. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+<div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Practical work is restricted to your own isolated training VM and synthetic data. Do not exploit the vsftpd backdoor, extract real password databases, crack other users' credentials, establish unauthorized access, create persistence, or delete/alter logs. Focus on read-only inspection, safe password-auditing demonstrations, detection and remediation. <a href="../#legal-policy">Read the full legal policy</a>.</div>
 </div>
 <div class="layout"><div>
-<section class="topic" id="topics"><div class="tag">01 · Overview</div><h2>Topics covered</h2><ul>
-<li>Credential and password security</li><li>Password storage, hashes, and offline password auditing</li><li>Privilege escalation concepts and prevention</li><li>Application execution and least privilege</li><li>Hidden files and suspicious file discovery</li><li>System logs, audit trails, and anti-forensics awareness</li><li>Rootkits, backdoors, and persistence indicators</li><li>Steganography and responsible digital investigation</li>
-</ul></section>
-
-<section class="topic" id="methodology"><div class="tag">02 · System security</div><h2>Understanding system hacking</h2>
-<p>System hacking describes attempts to gain or misuse access to an operating system, accounts, applications, or data. In an authorized security assessment, the goal is to understand how a system could be compromised and recommend controls that reduce the risk.</p>
-<h3>Common stages discussed in security assessments</h3>
-<div class="table-wrap"><table><thead><tr><th>Stage</th><th>Attacker objective</th><th>Defensive focus</th></tr></thead><tbody>
-<tr><td>Credential attack</td><td>Obtain or guess account credentials.</td><td>Strong authentication, MFA, rate limiting, secure password storage.</td></tr>
-<tr><td>Privilege escalation</td><td>Obtain permissions beyond the initial account.</td><td>Least privilege, patching, access reviews, secure configuration.</td></tr>
-<tr><td>Application execution</td><td>Run code or misuse legitimate tools.</td><td>Application control, endpoint monitoring, restricted permissions.</td></tr>
-<tr><td>Concealment</td><td>Make malicious files or activity harder to notice.</td><td>File integrity monitoring, centralized logs, endpoint detection.</td></tr>
-<tr><td>Persistence</td><td>Retain access after a restart or session end.</td><td>Startup and service monitoring, account reviews, trusted boot.</td></tr>
-<tr><td>Anti-forensics</td><td>Interfere with investigation or evidence.</td><td>Protected audit logs, time synchronization, evidence preservation.</td></tr>
+<section class="topic" id="lecture-notes">
+<div class="tag">01 · Lecture notes</div><h2>Topics Covered</h2>
+<ul><li>Credential Management</li><li>Password Cracking Techniques</li><li>Privilege Escalation</li><li>Executing Applications</li><li>Hiding Files</li><li>Covering Tracks</li><li>Rootkits and Backdoors</li><li>Steganography</li><li>Anti-Forensics</li></ul>
+<h3>Key Concepts</h3>
+<h4>System Hacking Methodology</h4>
+<ol>
+<li><strong>Cracking Passwords</strong> — attempts to obtain account credentials.</li>
+<li><strong>Escalating Privileges</strong> — attempts to gain higher permissions.</li>
+<li><strong>Executing Applications</strong> — running programs or tools on a system.</li>
+<li><strong>Hiding Files</strong> — concealing files or activity from ordinary inspection.</li>
+<li><strong>Covering Tracks</strong> — attempting to remove or alter logs and artifacts.</li>
+<li><strong>Maintaining Access</strong> — using persistence mechanisms to survive logoff or restart.</li>
+</ol>
+<div class="callout"><strong>Defensive perspective:</strong> These stages describe attacker objectives for recognition and risk analysis. The practical exercises on this page focus on detection and controls, not carrying out unauthorized access, concealment, or persistence.</div>
+<h4>Password Cracking Methods</h4>
+<ul>
+<li><strong>Dictionary Attack:</strong> Tests candidate words from a wordlist.</li>
+<li><strong>Brute Force Attack:</strong> Systematically tests possible character combinations.</li>
+<li><strong>Rainbow Tables:</strong> Uses precomputed lookup data against hashes that lack unique salts.</li>
+<li><strong>Hybrid Attack:</strong> Combines dictionary candidates with predictable variations.</li>
+<li><strong>Password Spraying:</strong> Tries a small number of common passwords across many accounts.</li>
+<li><strong>Credential Stuffing:</strong> Attempts to reuse credentials exposed in unrelated breaches.</li>
+</ul>
+<h4>Common Password Hashes</h4>
+<div class="table-wrap"><table><thead><tr><th>Hash / algorithm</th><th>Security context</th></tr></thead><tbody>
+<tr><td>LM Hash</td><td>Legacy Windows format; obsolete and weak.</td></tr>
+<tr><td>NTLM Hash</td><td>Windows authentication hash format; protect carefully and prefer modern authentication controls.</td></tr>
+<tr><td>MD5</td><td>Fast general-purpose hash; broken for collision resistance and unsuitable for password storage.</td></tr>
+<tr><td>SHA-1</td><td>Deprecated for collision-sensitive security uses; unsuitable for password storage.</td></tr>
+<tr><td>SHA-256</td><td>Modern general-purpose hash, but too fast to use alone for password storage.</td></tr>
+<tr><td>SHA-512</td><td>General-purpose hash; also too fast alone for password storage.</td></tr>
+<tr><td>bcrypt</td><td>Adaptive password-hashing function designed to make guessing more expensive.</td></tr>
 </tbody></table></div>
-<div class="callout"><strong>Professional practice:</strong> The stages above are a learning framework, not a checklist for compromising systems. In this course, practical work focuses on recognizing indicators, verifying controls, and documenting findings without establishing unauthorized access or hiding activity.</div>
+<p>For new password storage, use a dedicated password-hashing scheme such as Argon2id, scrypt or bcrypt, with unique salts and parameters appropriate to the application.</p>
+<h4>Privilege Escalation Vectors</h4>
+<ul><li>Unpatched operating-system vulnerabilities</li><li>Misconfigured services</li><li>Weak file permissions</li><li>Stored credentials</li><li>Kernel vulnerabilities</li><li>DLL search-order or hijacking weaknesses</li><li>Token and access-control misconfiguration</li><li>Insecure scheduled tasks</li><li>SUID/SGID binaries (Linux)</li></ul>
+<h3>Password Cracking Tools</h3>
+<div class="table-wrap"><table><thead><tr><th>Tool</th><th>Best For / Context</th><th>Platform</th></tr></thead><tbody>
+<tr><td>John the Ripper</td><td>Offline password-hash auditing with approved test hashes</td><td>Linux/Windows</td></tr>
+<tr><td>Hashcat</td><td>GPU-accelerated offline hash auditing with synthetic or authorized hashes</td><td>Linux/Windows</td></tr>
+<tr><td>Hydra</td><td>Online authentication testing; high risk of account lockout and service impact</td><td>Linux</td></tr>
+<tr><td>Medusa</td><td>Online login testing; use only with explicit scope and test accounts</td><td>Linux</td></tr>
+<tr><td>Cain &amp; Abel</td><td>Legacy Windows password recovery/auditing utility</td><td>Windows</td></tr>
+<tr><td>Mimikatz</td><td>Windows credential exposure research and detection context</td><td>Windows</td></tr>
+<tr><td>pwdump</td><td>Legacy Windows password-hash extraction utility; sensitive credential access</td><td>Windows</td></tr>
+</tbody></table></div>
+<div class="callout">Tool names are included for curriculum awareness. Do not use credential extraction, online login attacks, or credential-dumping features against real accounts or systems. For hands-on learning, use synthetic hashes and instructor-provided test data.</div>
 </section>
 
-<section class="topic" id="passwords"><div class="tag">03 · Credential security</div><h2>Password attacks and password protection</h2>
-<p>Passwords are a common target because they protect access to accounts, devices, and services. A password audit evaluates whether password policies and storage mechanisms resist guessing and offline recovery attempts.</p>
-<div class="table-wrap"><table><thead><tr><th>Technique</th><th>Concept</th><th>Defensive control</th></tr></thead><tbody>
-<tr><td><strong>Dictionary guessing</strong></td><td>Tests likely words or commonly used passwords.</td><td>Block common passwords; use long unique passphrases and MFA.</td></tr>
-<tr><td><strong>Brute-force guessing</strong></td><td>Systematically tries combinations.</td><td>Rate limiting, lockout protections, MFA, and monitoring.</td></tr>
-<tr><td><strong>Hybrid guessing</strong></td><td>Combines word candidates with predictable variations.</td><td>Use unpredictable, unique passwords rather than simple substitutions.</td></tr>
-<tr><td><strong>Password spraying</strong></td><td>Tries a small set of common passwords across multiple accounts.</td><td>Authentication monitoring, MFA, smart throttling, and banned-password lists.</td></tr>
-<tr><td><strong>Credential stuffing</strong></td><td>Reuses credentials exposed in unrelated breaches.</td><td>Unique passwords, MFA, breach monitoring, and secure recovery processes.</td></tr>
-<tr><td><strong>Rainbow-table lookup</strong></td><td>Uses precomputed hash lookup data against unsalted hashes.</td><td>Unique salts and modern, deliberately slow password-hashing algorithms.</td></tr>
-</tbody></table></div>
-<h3>Hashes and password storage</h3>
-<p>A cryptographic hash maps input data to a fixed-length digest. Password systems should not store plaintext passwords or rely on fast general-purpose hashes alone. They should use password-hashing schemes designed to resist guessing, with a unique salt for each password.</p>
-<div class="table-wrap"><table><thead><tr><th>Algorithm / format</th><th>Security context</th></tr></thead><tbody>
-<tr><td>LM</td><td>Legacy Windows hash format; obsolete and insecure.</td></tr>
-<tr><td>NTLM</td><td>Legacy Windows authentication hash; requires careful protection and modern alternatives where possible.</td></tr>
-<tr><td>MD5 / SHA-1</td><td>Not suitable for password storage; both are considered unsuitable for modern security use.</td></tr>
-<tr><td>SHA-256 / SHA-512</td><td>General-purpose cryptographic hashes; fast, so not ideal alone for password storage.</td></tr>
-<tr><td>bcrypt / scrypt / Argon2id</td><td>Password-hashing functions designed to make guessing more expensive; use appropriately configured parameters.</td></tr>
-</tbody></table></div>
-<h3>Credential protection checklist</h3><ul><li>Require long, unique passwords and use a reputable password manager.</li><li>Enable multifactor authentication, especially for privileged accounts.</li><li>Store passwords using a modern password-hashing function with unique salts.</li><li>Protect password reset and account recovery workflows.</li><li>Monitor unusual login patterns and repeated failures.</li><li>Remove stale accounts and rotate credentials after suspected compromise.</li></ul>
-</section>
+<section class="topic" id="lab">
+<div class="tag">02 · Practical lab 6</div><h2>Password Security &amp; System Access Audit</h2>
+<h3>Objectives</h3>
+<ul><li>Understand how password hashes are stored and assessed.</li><li>Practice password auditing with synthetic training hashes.</li><li>Review account identity and permissions on a Linux test VM.</li><li>Identify privilege-escalation risk indicators safely.</li><li>Document findings and defensive recommendations.</li></ul>
+<div class="callout"><strong>Important lab boundary:</strong> The supplied course outline mentions the Metasploitable vsftpd 2.3.4 backdoor and password-hash extraction. This page does not provide steps to obtain a root shell or extract and crack real account credentials. You will instead document the known vulnerable service as a case study and complete safe, read-only checks on your own isolated VM.</div>
+<h3>Step-by-Step Instructions</h3>
+<h4>Step 1: FTP Service Case Study (Metasploitable)</h4>
+<p>Metasploitable 2 is intentionally vulnerable and may include an old vsftpd 2.3.4 service. In this exercise, identify the service version only on your own isolated Metasploitable VM and document why unsupported FTP services are dangerous. Do not trigger the backdoor or attempt to obtain a shell.</p>
+<pre><code># Confirm the target is your isolated Metasploitable VM.
+# Read-only service-version identification:
+nmap -sV -p 21 &lt;LAB_TARGET_IP&gt;</code></pre>
+<p>Record the detected service, version, evidence, potential impact, and recommended remediation (remove the vulnerable service, isolate the host, or rebuild from a trusted image).</p>
+<h4>Step 2: Understand Password Hash Storage</h4>
+<p>Study the roles of Linux account metadata and protected password-hash storage using documentation or instructor-provided sample files. Do not read, copy, export, or distribute <code>/etc/shadow</code> or another user's credential store.</p>
+<pre><code># Display account names and metadata only (no password hashes):
+cut -d: -f1,3,4,6,7 /etc/passwd</code></pre>
+<h4>Step 3: Password Auditing with John the Ripper</h4>
+<p>Use only a synthetic hash file supplied by your instructor or generated specifically for this exercise. Do not use hashes obtained from real users or systems.</p>
+<pre><code># Example workflow with instructor-provided synthetic test hashes:
+john --wordlist=&lt;APPROVED_TEST_WORDLIST&gt; &lt;SYNTHETIC_HASH_FILE&gt;
 
-<section class="topic" id="privilege"><div class="tag">04 · Access control</div><h2>Privilege escalation</h2>
-<p><strong>Privilege escalation</strong> occurs when a user or process obtains permissions beyond those intended by the system's access-control design.</p>
-<div class="table-wrap"><table><thead><tr><th>Risk area</th><th>Example weakness</th><th>Defensive measure</th></tr></thead><tbody>
-<tr><td>Operating system</td><td>Unpatched kernel or system component.</td><td>Supported versions, timely patching, controlled maintenance.</td></tr>
-<tr><td>File permissions</td><td>Sensitive files or executables are writable by untrusted users.</td><td>Least privilege and regular permission reviews.</td></tr>
-<tr><td>Services</td><td>A privileged service uses unsafe files or configuration.</td><td>Dedicated service accounts, protected paths, secure service configuration.</td></tr>
-<tr><td>Scheduled tasks</td><td>A privileged task references files that ordinary users can change.</td><td>Restrict task modification and verify ownership and permissions.</td></tr>
-<tr><td>Stored credentials</td><td>Secrets are left in scripts, configuration files, or logs.</td><td>Use a secrets manager and restrict access to sensitive files.</td></tr>
-<tr><td>Administrative delegation</td><td>Broad or unnecessary sudo / administrator rights.</td><td>Use narrowly scoped permissions and periodic access reviews.</td></tr>
-</tbody></table></div>
-<h3>Linux commands for authorized, read-only inspection</h3>
-<pre><code># Current account and group membership
+# Display results for that synthetic test file:
+john --show &lt;SYNTHETIC_HASH_FILE&gt;</code></pre>
+<h4>Step 4: Understand Hashcat Modes</h4>
+<p>Hashcat supports different hash formats. The following are examples of mode identifiers for synthetic training data; only use the approved sample file and wordlist provided for the lab.</p>
+<pre><code># MD5 example mode, synthetic training data only:
+hashcat -m 0 -a 0 &lt;SYNTHETIC_HASH_FILE&gt; &lt;APPROVED_TEST_WORDLIST&gt;
+
+# NTLM example mode, synthetic training data only:
+hashcat -m 1000 -a 0 &lt;SYNTHETIC_HASH_FILE&gt; &lt;APPROVED_TEST_WORDLIST&gt;</code></pre>
+<h4>Step 5: Review SSH and Account Security</h4>
+<p>Do not log in using recovered credentials. Review SSH configuration and account controls on a VM you administer, without changing settings during this exercise.</p>
+<pre><code># Inspect SSH service status:
+systemctl status ssh --no-pager
+
+# Review effective account identity and groups:
 whoami
-id
-
-# Operating system and kernel information
-uname -a
+id</code></pre>
+<h4>Step 6: Linux Privilege-Escalation Risk Review</h4>
+<p>Use these read-only checks to understand the system's configuration. Do not run exploit code, change permissions, alter scheduled tasks, or attempt to elevate privileges.</p>
+<pre><code># Kernel and OS information:
+uname -r
 cat /etc/os-release
 
-# Review the current account's permitted sudo commands
-sudo -l
+# Review SUID/SGID file metadata (read-only):
+find /usr/bin /usr/sbin -type f -perm /6000 -print 2&gt;/dev/null
 
-# Display permissions on selected system paths
-ls -ld /etc /etc/cron.d /usr/local/bin</code></pre>
-<p>These commands help document the current account and configuration. Do not modify permissions, replace binaries, alter scheduled tasks, or attempt to exploit a weakness during this inspection exercise.</p>
-</section>
+# Review cron directory metadata:
+ls -ld /etc/cron.d /etc/cron.daily /etc/cron.hourly
 
-<section class="topic" id="files"><div class="tag">05 · File integrity</div><h2>Hidden files and suspicious changes</h2>
-<p>Operating systems use hidden files for ordinary configuration and application data. On Linux, filenames beginning with a dot are hidden by default in many file browsers. Hidden does not mean malicious; investigate context, ownership, permissions, timestamps, and file integrity before drawing conclusions.</p>
-<pre><code># List ordinary and hidden entries in your own lab home directory
-ls -la ~
-
-# Display file type and permissions for a selected file
-file ~/example-file
-stat ~/example-file
-
-# Generate a SHA-256 checksum for a file you own
-sha256sum ~/example-file</code></pre>
-<p>File integrity monitoring compares trusted checksums or metadata over time to help identify unexpected changes. A changed checksum is an investigation lead, not proof of malicious activity.</p>
-</section>
-
-<section class="topic" id="logs"><div class="tag">06 · Digital forensics</div><h2>Covering tracks and anti-forensics awareness</h2>
-<p>Attackers may attempt to delete, alter, or avoid generating logs to make an incident harder to investigate. This is commonly described as covering tracks or anti-forensics. Security professionals study these behaviors to recognize gaps and preserve reliable evidence.</p>
-<h3>Defensive logging practices</h3><ul>
-<li>Forward important logs to a separate, access-controlled logging platform.</li>
-<li>Restrict who can change or delete audit records.</li>
-<li>Synchronize system clocks with trusted time sources.</li>
-<li>Retain logs according to legal, operational, and organizational requirements.</li>
-<li>Alert on unexpected changes to audit settings, logging services, or retention policies.</li>
-<li>Preserve original evidence and document every investigative action.</li>
-</ul>
-<div class="callout"><strong>Evidence handling:</strong> Never delete or alter logs as part of this lesson. If you suspect a compromise, preserve relevant records, record timestamps and system details, and follow your incident-response process.</div>
-</section>
-
-<section class="topic" id="persistence"><div class="tag">07 · Threat detection</div><h2>Rootkits, backdoors, and persistence</h2>
-<p>A <strong>rootkit</strong> is a collection of techniques or components intended to conceal malicious activity or maintain privileged access. A <strong>backdoor</strong> is an access mechanism that bypasses normal authentication or security controls. <strong>Persistence</strong> refers to techniques that allow unwanted access or execution to survive events such as logoff or restart.</p>
-<h3>Potential indicators to investigate</h3><ul>
-<li>Unexpected services, startup entries, scheduled tasks, or user accounts.</li>
-<li>Changes to system binaries or security configuration without an approved change record.</li>
-<li>Unusual privileged processes or unexplained network connections.</li>
-<li>Security tools unexpectedly disabled or audit settings modified.</li>
-<li>File integrity alerts involving critical operating-system locations.</li>
-</ul>
-<h3>Defensive response</h3><ol><li>Preserve relevant logs and record the time and source of the alert.</li><li>Compare the affected system with a trusted baseline.</li><li>Use reputable endpoint security and integrity-monitoring tools.</li><li>Isolate a suspected compromised machine according to incident-response policy.</li><li>Rebuild from trusted media when integrity cannot be established, then rotate affected credentials.</li></ol>
-</section>
-
-<section class="topic" id="steganography"><div class="tag">08 · Information hiding</div><h2>Steganography</h2>
-<p><strong>Steganography</strong> is the practice of concealing information inside an ordinary-looking carrier, such as an image, audio file, or document. It differs from encryption: encryption protects the meaning of data, while steganography attempts to conceal the existence of the data.</p>
-<div class="table-wrap"><table><thead><tr><th>Concept</th><th>Purpose</th></tr></thead><tbody><tr><td>Encryption</td><td>Makes information unreadable without the required key.</td></tr><tr><td>Steganography</td><td>Hides the presence of a message within another file or medium.</td></tr><tr><td>Digital watermarking</td><td>Embeds identifying or ownership information in media.</td></tr></tbody></table></div>
-<p>For defensive investigation, compare files with trusted originals, examine metadata, review unexpected file-size changes, and use approved forensic tools. No hidden-data extraction from third-party files is part of this practical lesson.</p>
-</section>
-
-<section class="topic" id="lab"><div class="tag">09 · Practical lab 6</div><h2>System security audit and credential hygiene</h2>
-<p><strong>Objectives</strong></p><ul><li>Inspect account identity and permissions on a system you control.</li><li>Review password-storage principles using synthetic training data.</li><li>Identify suspicious permission and persistence indicators without changing the system.</li><li>Practice evidence preservation and write defensive recommendations.</li></ul>
-<div class="callout"><strong>Lab scope:</strong> Use your own Kali VM or another Linux test VM. Do not extract password databases, use real users' password hashes, attempt logins with recovered credentials, exploit vulnerabilities, modify startup entries, or delete logs. The exercises below are read-only.</div>
-<h3>Step 1: Record system identity</h3>
-<pre><code>whoami
-id
-hostname
-uname -a
-cat /etc/os-release</code></pre>
-<p>Record the operating system, current user, groups, and kernel information. Avoid including personal information in screenshots submitted publicly.</p>
-<h3>Step 2: Review account and permission controls</h3>
-<pre><code># Review your own home directory permissions
-ls -ld ~
-
-# Inspect selected configuration directory permissions
-ls -ld /etc /etc/ssh
-
-# Review the current account's administrative permissions
+# Review current account's sudo permissions:
 sudo -l</code></pre>
-<p>Do not read or copy <code>/etc/shadow</code> or other users' credential stores. Document any unexpectedly broad permissions and explain how least privilege should be applied.</p>
-<h3>Step 3: Learn password hashing with synthetic data</h3>
-<p>Use a made-up training password and a generated sample hash from an instructor-approved password-hashing demonstration. Do not use real account hashes or passwords. In your notes, explain why unique salts and slow password-hashing functions reduce the effectiveness of precomputed and high-speed guessing attacks.</p>
-<h3>Step 4: Review integrity and persistence indicators</h3>
-<pre><code># List startup-related systemd services (read-only)
-systemctl list-unit-files --type=service
-
-# Review recent system log entries (read-only)
-journalctl -n 30 --no-pager
-
-# Inspect your own home directory, including hidden entries
-ls -la ~</code></pre>
-<p>Identify entries you cannot explain and describe how you would verify them against a trusted baseline. Do not disable services or alter audit records.</p>
-<h3>Step 5: Prepare a defensive audit report</h3>
-<p>Document the environment, commands used, observations, evidence, risk, and recommended controls. Clearly distinguish confirmed configuration issues from items that require further investigation.</p>
-<h3>Expected outcomes</h3><ul><li>System and account inventory for the test VM.</li><li>Read-only permission and service review.</li><li>Explanation of secure password storage and hash auditing concepts.</li><li>Examples of persistence and anti-forensics indicators.</li><li>A concise defensive system-audit report.</li></ul>
+<h3>Expected Outcomes</h3>
+<ul><li>Documented service-version observation from the isolated lab.</li><li>Understanding of password hashes and safe offline auditing using synthetic data.</li><li>Read-only account and permission review.</li><li>Identification of privilege-escalation risk categories.</li><li>Professional technical report with evidence and defensive recommendations.</li></ul>
 </section>
 
-<section class="topic assignment" id="assignment"><div class="tag">10 · Assessment</div><h2>Assignment 6</h2>
-<h3>Part A: System security audit <span class="points">(60 points)</span></h3>
-<p>Perform a read-only security review of a Linux VM you own or are explicitly authorized to assess.</p><ol><li>Document the operating system, kernel, current user, and group membership.</li><li>Review selected directory permissions and the current account's administrative privileges.</li><li>Explain how secure password storage works. Use synthetic examples only; do not collect or crack real users' hashes.</li><li>Identify at least three security controls that help prevent privilege escalation.</li><li>Describe two indicators of suspicious persistence and how a defender could investigate them without altering evidence.</li></ol>
-<h3>Part B: Research and analysis <span class="points">(40 points)</span></h3>
-<p>Research the following five Linux privilege-escalation risk categories:</p><ol><li>Unpatched kernel or operating-system components.</li><li>Unsafe SUID/SGID configuration.</li><li>Writable sensitive files or directories.</li><li>Insecure scheduled-task configuration.</li><li>Overly broad sudo permissions.</li></ol>
-<p>For each category, explain what the weakness means, how an administrator can identify it safely, the potential impact, and practical prevention measures. Do not provide or demonstrate exploitation steps.</p>
-<div class="callout"><strong>Submission format:</strong> A professional technical document with screenshots of your own lab, read-only commands, observations, risk analysis, and remediation recommendations. Do not include passwords, private keys, credential hashes, or unrelated personal data.</div>
+<section class="topic assignment" id="assignment">
+<div class="tag">03 · Assessment</div><h2>Assignment 6</h2>
+<h3>Part A: System Hacking Documentation <span class="points">(60 points)</span></h3>
+<p>Complete a documented security assessment using your isolated Metasploitable VM and a Linux test VM you control. Do not trigger the vsftpd backdoor, extract real password hashes, or use recovered credentials to access a system.</p>
+<ol>
+<li>Identify the FTP service and version on the isolated Metasploitable VM and explain the security risk associated with the vulnerable version.</li>
+<li>Explain the difference between <code>/etc/passwd</code> account metadata and protected password-hash storage. Do not submit real credential data.</li>
+<li>Perform an offline password-auditing demonstration using an instructor-provided synthetic hash file with John the Ripper or Hashcat.</li>
+<li>Document account identity, groups, kernel version, selected file permissions, and current sudo permissions on your own Linux VM.</li>
+<li>Include screenshots and explain the defensive action recommended for each issue.</li>
+</ol>
+<h3>Part B: Privilege Escalation Research <span class="points">(40 points)</span></h3>
+<p>Research and explain these five Linux privilege-escalation techniques:</p>
+<ol><li>Kernel exploits</li><li>SUID/SGID binaries</li><li>Writable configuration files</li><li>Cron job misconfiguration</li><li>sudo misconfigurations</li></ol>
+<p>For each technique, provide:</p>
+<ul><li>How it works (conceptual explanation)</li><li>How to identify the vulnerability safely</li><li>Potential impact if abused</li><li>How to prevent it</li></ul>
+<div class="callout"><strong>Submission Format:</strong> Detailed technical document with commands and screenshots from your own authorized lab. Include scope, methodology, findings, risk analysis, and remediation. Do not include passwords, private keys, real credential hashes, or instructions for exploiting systems outside your lab.</div>
 </section>
 </div></div>
 </main>
