@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CEH Academy Week 2: Footprinting and Reconnaissance. OSINT concepts, passive research, DNS fundamentals, safe practical lab and assignment.">
+  <meta name="theme-color" content="#080d18">
+  <link rel="canonical" href="https://abbasdalhatu.github.io/CEH-Course/weeks/week-02.html">
+  <title>Week 2: Footprinting and Reconnaissance | CEH Academy</title>
+  <style>
+    :root{--bg:#080d18;--surface:#101a2b;--surface2:#142238;--border:#263750;--text:#edf5ff;--muted:#9aabc2;--green:#00e5a0;--blue:#00b8ff;--danger:#ff647c}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(ellipse at 10% 0%,rgba(0,229,160,.08),transparent 35%),var(--bg);color:var(--text);font:15px/1.7 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:var(--green);text-decoration:none}a:hover{text-decoration:underline}.container{width:min(1240px,calc(100% - 48px));margin:auto}
+    header{position:sticky;top:0;z-index:5;background:rgba(8,13,24,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+    .nav{min-height:66px;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:850;letter-spacing:.05em;color:var(--text)}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em}
+    .back{font-size:13px;font-weight:750}.hero{padding:58px 0 38px}.eyebrow,.tag{color:var(--green);font-size:11px;font-weight:850;letter-spacing:.14em;text-transform:uppercase}
+    h1{font-size:clamp(34px,6vw,56px);line-height:1.08;letter-spacing:-.045em;margin:12px 0}.lead{max-width:720px;color:var(--muted);font-size:17px}
+    .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.meta span{padding:7px 11px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,.025);font-size:11px;color:var(--muted)}
+    .warning{margin:20px 0;padding:17px 19px;border:1px solid rgba(255,100,124,.4);border-radius:14px;background:rgba(255,100,124,.07);color:#d6dce6;font-size:13px}.warning strong{color:#ff8798}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr);gap:26px;align-items:start;padding-bottom:60px}.toc{position:sticky;top:88px;padding:18px;border:1px solid var(--border);border-radius:14px;background:var(--surface)}.toc strong{display:block;margin-bottom:10px}.toc a{display:block;padding:6px 0;color:var(--muted);font-size:12px}.toc a:hover{color:var(--green)}
+    section.topic{padding:25px;margin-bottom:17px;border:1px solid var(--border);border-radius:16px;background:linear-gradient(145deg,rgba(20,34,56,.82),rgba(13,22,37,.92));scroll-margin-top:88px}
+    h2{font-size:23px;line-height:1.25;margin:0 0 17px;letter-spacing:-.025em}h3{font-size:16px;margin:23px 0 8px;color:var(--green)}h4{font-size:14px;margin:18px 0 7px}
+    p,li{color:#c4cfdd}ul,ol{padding-left:22px}li{margin:6px 0}strong{color:var(--text)}
+    .callout{padding:14px 16px;border-left:3px solid var(--blue);background:rgba(0,184,255,.07);border-radius:0 10px 10px 0;color:#c4cfdd;font-size:13px;margin:15px 0}
+    .table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--border);vertical-align:top}th{color:var(--green)}
+    pre{overflow-x:auto;padding:15px;border:1px solid #1b2b40;border-radius:11px;background:#070c14;color:#b9cce0;font:12px/1.7 "SFMono-Regular",Consolas,monospace}
+    .steps{counter-reset:step;list-style:none;padding:0}.steps li{counter-increment:step;position:relative;padding:0 0 14px 42px}.steps li:before{content:counter(step);position:absolute;left:0;top:0;width:27px;height:27px;display:grid;place-items:center;border-radius:8px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.3);color:var(--green);font-weight:850}
+    .assignment{border-color:rgba(0,229,160,.3)!important}.points{color:var(--green);font-size:12px;font-weight:800}
+    footer{border-top:1px solid var(--border);padding:25px 0;color:var(--muted);font-size:11px}
+    @media(max-width:760px){.layout{grid-template-columns:1fr}.toc{position:static}.toc nav{display:grid;grid-template-columns:repeat(2,1fr);gap:0 12px}.hero{padding-top:42px}section.topic{padding:19px}.nav{min-height:60px}}
+  </style>
+</head>
+<body>
+<header><div class="container nav"><a class="brand" href="../">CEH ACADEMY<small>CERTIFIED ETHICAL HACKER</small></a><a class="back" href="../#curriculum">← Back to curriculum</a></div></header>
+<main class="container">
+  <div class="hero">
+    <div class="eyebrow">Foundation module · Week 02</div>
+    <h1>Footprinting and Reconnaissance</h1>
+    <p class="lead">Learn how security professionals collect and organize publicly available information, understand passive and active reconnaissance, and build a responsible footprint of an authorized target.</p>
+    <div class="meta"><span>LECTURE NOTES</span><span>PRACTICAL LAB 2</span><span>ASSIGNMENT 2</span></div>
+    <div class="warning"><strong>⚠ AUTHORIZATION IS MANDATORY.</strong> Use passive research only for public-domain exercises, and perform active queries or scans only against systems you own or targets explicitly covered by prior written permission. Never access, download, disclose, or test private data or systems outside the approved scope. <a href="../#legal-policy">Read the full legal policy</a>.</div>
+  </div>
+  <div class="layout">
+    <div>
+      <section class="topic" id="topics"><div class="tag">01 · Overview</div><h2>Topics covered</h2><ul>
+        <li>Footprinting methodology</li><li>Passive vs. active reconnaissance</li><li>Open Source Intelligence (OSINT)</li><li>Search engine operators and Google dorking</li><li>Social media and organizational research</li><li>Website and technology reconnaissance</li><li>Email and domain information</li><li>DNS fundamentals and enumeration</li>
+      </ul></section>
+
+      <section class="topic" id="footprinting"><div class="tag">02 · Core concept</div><h2>What is footprinting?</h2>
+        <p><strong>Footprinting</strong> is the structured process of collecting information about an organization, domain, or system to understand its public-facing digital presence. In an authorized security assessment, this helps define what is known about the target before any technical testing begins.</p>
+        <h3>Information that may be collected</h3><ul>
+          <li>Public domain names and published IP address ranges.</li><li>Publicly documented services and technologies.</li><li>Organization-level contact channels and published email formats.</li><li>Public subsidiaries, business units, and locations.</li><li>Technology clues in official documentation, job advertisements, and press releases.</li><li>Public DNS records and historical website information.</li>
+        </ul>
+        <div class="callout"><strong>Data minimization:</strong> Collect only information relevant to the approved assessment. Avoid compiling personal profiles, collecting private contact details, or retaining information that is not needed.</div>
+      </section>
+
+      <section class="topic" id="recon-types"><div class="tag">03 · Reconnaissance methods</div><h2>Passive vs. active reconnaissance</h2>
+        <div class="table-wrap"><table><thead><tr><th>Method</th><th>Meaning</th><th>Examples</th></tr></thead><tbody>
+          <tr><td><strong>Passive</strong></td><td>Uses information already published or available through third-party sources without directly probing the target's systems.</td><td>Official websites, public reports, search engines, published DNS data, public registries.</td></tr>
+          <tr><td><strong>Active</strong></td><td>Involves sending queries or requests directly to target infrastructure. It may be logged, affect services, or require explicit authorization.</td><td>Direct DNS queries, service discovery, port scanning, and network mapping within an approved scope.</td></tr>
+        </tbody></table></div>
+        <p>Passive does not automatically mean risk-free or unrestricted. Respect privacy, site terms, applicable law, and the purpose for which information was published. Active reconnaissance must remain inside the written scope.</p>
+      </section>
+
+      <section class="topic" id="osint"><div class="tag">04 · Intelligence gathering</div><h2>Open Source Intelligence (OSINT)</h2>
+        <p><strong>OSINT</strong> is the practice of collecting, validating, and analyzing information from publicly available sources. Security teams use it to understand an organization's public exposure and to make informed defensive decisions.</p>
+        <h3>Common public sources</h3><ul>
+          <li>Official company websites, documentation, and press releases.</li><li>Public domain-registration records, where available.</li><li>Public DNS records.</li><li>Search engines and public archives such as the <a href="https://web.archive.org/" target="_blank" rel="noopener">Internet Archive Wayback Machine</a>.</li><li>Public technology documentation and job advertisements.</li><li>Official social media pages and public organizational announcements.</li>
+        </ul>
+        <h3>OSINT workflow</h3><ol><li>Define the organization and the approved research question.</li><li>Identify relevant public sources.</li><li>Collect only relevant information and record its source and date.</li><li>Cross-check important findings with another reliable source.</li><li>Separate verified facts from assumptions.</li><li>Summarize defensive implications and securely store the report.</li></ol>
+      </section>
+
+      <section class="topic" id="google-dorking"><div class="tag">05 · Search techniques</div><h2>Search engine operators</h2>
+        <p>Search operators refine ordinary search queries. They can help locate public pages on a domain you own or are authorized to assess. The examples below use <code>example.com</code>, a reserved example domain.</p>
+        <div class="table-wrap"><table><thead><tr><th>Operator</th><th>Purpose</th><th>Safe example</th></tr></thead><tbody>
+          <tr><td><code>site:</code></td><td>Limits results to a domain.</td><td><code>site:example.com</code></td></tr>
+          <tr><td><code>filetype:</code></td><td>Looks for a particular public file type.</td><td><code>site:example.com filetype:pdf</code></td></tr>
+          <tr><td><code>intitle:</code></td><td>Looks for words in page titles.</td><td><code>site:example.com intitle:about</code></td></tr>
+          <tr><td><code>inurl:</code></td><td>Looks for words in page URLs.</td><td><code>site:example.com inurl:news</code></td></tr>
+          <tr><td><code>"phrase"</code></td><td>Searches for an exact phrase.</td><td><code>site:example.com "contact us"</code></td></tr>
+        </tbody></table></div>
+        <div class="callout">Do not use search operators to seek exposed credentials, private records, database dumps, or restricted administrative material. If sensitive information appears unexpectedly, do not open or download it; record the minimum necessary evidence and report it through an authorized channel.</div>
+      </section>
+
+      <section class="topic" id="dns"><div class="tag">06 · Domain intelligence</div><h2>DNS reconnaissance</h2>
+        <p>The <strong>Domain Name System (DNS)</strong> translates human-readable domain names into information that computers use to locate services. Public DNS records can reveal how a domain publishes its web, mail, and other services.</p>
+        <div class="table-wrap"><table><thead><tr><th>Record</th><th>Purpose</th></tr></thead><tbody>
+          <tr><td><strong>A</strong></td><td>Maps a hostname to an IPv4 address.</td></tr><tr><td><strong>AAAA</strong></td><td>Maps a hostname to an IPv6 address.</td></tr><tr><td><strong>MX</strong></td><td>Identifies mail servers for a domain.</td></tr><tr><td><strong>NS</strong></td><td>Identifies authoritative name servers.</td></tr><tr><td><strong>TXT</strong></td><td>Stores text data, often used for domain verification and email-security policies.</td></tr><tr><td><strong>CNAME</strong></td><td>Creates an alias from one hostname to another.</td></tr>
+        </tbody></table></div>
+        <h3>Useful commands</h3><p>These examples query the reserved <code>example.com</code> domain for basic DNS learning:</p>
+        <pre><code>nslookup example.com
+nslookup -type=MX example.com
+nslookup -type=NS example.com
+
+dig example.com A
+dig example.com MX
+dig example.com NS</code></pre>
+        <p>Use direct DNS enumeration or subdomain discovery against a real organization only when its written authorization explicitly permits it. Do not assume that a public domain or a bug-bounty listing authorizes every technique.</p>
+      </section>
+
+      <section class="topic" id="tools"><div class="tag">07 · Tool awareness</div><h2>Common reconnaissance tools</h2>
+        <div class="table-wrap"><table><thead><tr><th>Tool</th><th>Purpose</th><th>Important boundary</th></tr></thead><tbody>
+          <tr><td><strong>WHOIS</strong></td><td>Displays available domain-registration information.</td><td>Use public records; registration data may be redacted.</td></tr>
+          <tr><td><strong>nslookup / dig</strong></td><td>Queries DNS records.</td><td>Use example domains for practice; query real targets only within scope.</td></tr>
+          <tr><td><strong>theHarvester</strong></td><td>Collects publicly indexed domain-related information.</td><td>Do not harvest or compile personal data unnecessarily.</td></tr>
+          <tr><td><strong>Maltego</strong></td><td>Visualizes relationships between information entities.</td><td>Validate sources and minimize personal information.</td></tr>
+          <tr><td><strong>Shodan</strong></td><td>Searches information about internet-connected devices.</td><td>Search only for learning or assets you are authorized to assess.</td></tr>
+          <tr><td><strong>Wappalyzer</strong></td><td>Identifies technologies used by websites.</td><td>Use on your own website or an explicitly authorized target.</td></tr>
+          <tr><td><strong>recon-ng</strong></td><td>Provides a modular framework for reconnaissance workflows.</td><td>Review module behavior and scope before running it.</td></tr>
+        </tbody></table></div>
+      </section>
+
+      <section class="topic" id="lab"><div class="tag">08 · Practical lab 2</div><h2>Passive reconnaissance and DNS research</h2>
+        <p><strong>Objectives</strong></p><ul><li>Understand the difference between passive and active reconnaissance.</li><li>Collect basic public information about a reserved example domain.</li><li>Query common DNS record types.</li><li>Practice safe search operators.</li><li>Prepare a concise, source-backed reconnaissance report.</li></ul>
+        <div class="callout"><strong>Lab scope:</strong> Use <code>example.com</code> for the command examples. For any real organization, limit the exercise to passive public research unless you have explicit written permission covering the specific active technique.</div>
+        <ol class="steps">
+          <li><strong>Review domain registration information.</strong><p>If WHOIS is installed, run:</p><pre><code>whois example.com</code></pre><p>Record only general domain-registration details that are publicly returned. Some fields may be hidden for privacy.</p></li>
+          <li><strong>Query DNS records.</strong><p>Run the following commands and note what each record type tells you:</p><pre><code>nslookup example.com
+nslookup -type=MX example.com
+nslookup -type=NS example.com
+dig example.com A
+dig example.com MX
+dig example.com TXT</code></pre></li>
+          <li><strong>Practice search operators.</strong><p>Enter these safe example queries into a search engine:</p><pre><code>site:example.com
+site:example.com filetype:pdf
+site:example.com intitle:about
+site:example.com "contact us"</code></pre><p>Explain how each operator changes the search results. Do not search for credentials, private files, or exposed databases.</p></li>
+          <li><strong>Review public website technologies.</strong><p>Use the <a href="https://www.wappalyzer.com/" target="_blank" rel="noopener">Wappalyzer website</a> to learn how technology identification works. For hands-on inspection of a real site, use a website you own or have permission to assess.</p></li>
+          <li><strong>Organize your findings.</strong><p>Create a table with the source, observation, date collected, confidence level, and defensive relevance. Clearly label anything that has not been independently verified.</p></li>
+        </ol>
+        <h3>Expected outcomes</h3><ul><li>Explanation of passive and active reconnaissance.</li><li>Basic WHOIS and DNS observations for the example domain.</li><li>Five correctly explained search operators or queries.</li><li>A short, organized report with sources and dates.</li></ul>
+      </section>
+
+      <section class="topic assignment" id="assignment"><div class="tag">09 · Assessment</div><h2>Assignment 2</h2>
+        <h3>Part A: Reconnaissance report <span class="points">(60 points)</span></h3>
+        <p>Choose an organization with a published vulnerability disclosure or bug-bounty policy. Conduct <strong>passive public-source research only</strong>, and follow the program's published scope and rules. Do not scan, probe, log in, test vulnerabilities, or contact employees.</p>
+        <ol><li>Summarize the organization's public digital footprint using official sources.</li><li>List up to 10 publicly documented subdomains only when they are clearly published by official sources or passive datasets permitted by the program.</li><li>Describe technologies identified from public documentation or the organization's own website.</li><li>Summarize organization-level information from official public pages; do not compile personal profiles or private contact details.</li><li>Explain two defensive observations and support each with a source.</li></ol>
+        <h3>Part B: Search operator challenge <span class="points">(40 points)</span></h3>
+        <ol><li>Create 10 search queries using operators such as <code>site:</code>, <code>filetype:</code>, <code>intitle:</code>, <code>inurl:</code>, and exact-phrase search.</li><li>Test them on <code>example.com</code> or a domain you own.</li><li>Explain what each query is designed to find and what its results actually show.</li><li>Do not search for or access exposed credentials, private records, or restricted files.</li></ol>
+        <div class="callout"><strong>Submission format:</strong> Professional PDF report, 5–8 pages. Include your research scope, sources, dates, findings, limitations, and defensive recommendations. Remove unnecessary personal information before submission.</div>
+      </section>
+    </div>
+  </div>
+</main>
+<footer><div class="container">© 2026 CEH Academy · Educational use and authorized security testing only. · <a href="../#legal-policy">Legal disclaimer</a></div></footer>
+</body>
+</html>
